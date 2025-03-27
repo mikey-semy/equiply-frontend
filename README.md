@@ -1,54 +1,151 @@
-# React + TypeScript + Vite
+# Equiply
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание проекта
 
-Currently, two official plugins are available:
+**Equiply** — это современная система управления оборудованием, предназначенная для автоматизации процессов обслуживания и оптимизации работы с техническими средствами. Данный репозиторий содержит frontend-часть платформы, разработанную с использованием React, TypeScript и Vite.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Установка
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Клонируйте репозиторий в директорию, в которой находитесь:
+```bash
+git clone https://github.com/mikey-semy/equiply-frontend.git .
+```
+Или:
+```bash
+git clone https://github.com/mikey-semy/equiply-frontend.git
+```
+Перейдите в директорию с проектом:
+```bash
+cd ./equiply-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> [!NOTE]
+> Перед тем, как запускать проект, проверьте наличие файла `.env`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Первый запуск
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+Установите зависимости:
+```bash
+yarn
 ```
+
+Запустите проект в режиме разработки:
+```bash
+yarn dev
+```
+
+## Сборка проекта
+
+Для создания production-сборки:
+
+```bash
+yarn build
+```
+
+Для предварительного просмотра production-сборки:
+```bash
+yarn preview
+```
+
+## Разработка
+
+### Процесс разработки такой:
+- Разработка идёт от `dev`
+- В dev мерджим фичи
+- Тестим на `dev`
+- Когда всё ок - мерджим `dev` в main
+
+Если вы хотите внести изменения или улучшения, пожалуйста, следуйте этим шагам:
+
+1. Переключаемся на `dev` и подтягиваем последние изменения с удалённого репозитория:
+```bash
+git checkout dev
+git pull origin dev
+```
+
+2. От `dev` создаем свою ветку разработки и сразу на неё переключаемся:
+```bash
+git checkout -b feature/your-name-of-feature
+```
+
+3. Кодим и по итогу добавляем все изменения в индекс:
+```bash
+git add .
+```
+
+4. Создаём коммит с описанием изменений
+```bash
+git commit -m "feat: your-changes"
+```
+
+5. Перед пушем обновляем ветку от `dev`, то есть
+ 1) Переключаемся обратно на dev
+ 2) Подтягиваем новые изменения
+ 3) Возвращаемся на свою ветку
+ 4) Переносим свои изменения поверх последней версии `dev`
+
+```bash
+git checkout dev
+git pull origin dev
+git checkout feature/your-name-of-feature
+git rebase dev
+```
+
+6. Отправляем свою ветку в удалённый репозиторий:
+```bash
+git push origin feature/your-name-of-feature --force-with-lease
+```
+
+7. Создаем Pull Request в dev ветку!
+> 1) Жмём кнопку "New Pull Request"
+> 2) В base выбираем `dev` (КУДА льём)
+> 3) В compare выбираем свою ветку feature/your-name-of-feature (ОТКУДА льём)
+> 4) Пишешь нормальное описание что сделали
+> 5) Добавляем ревьюеров
+> 6) Создаёи PR
+
+Либо просто делаем merge в dev ветку из своей feature/your-name-of-feature ветки.
+```bash
+git checkout dev
+git merge feature/your-name-of-feature
+```
+
+8. После тестирования на `dev`, создаём PR из `dev` в `main`.
+> 1) Создаём новый PR
+> 2) В base выбираем main (КУДА льём)
+> 3) В compare выбираем dev (ОТКУДА льём)
+> 4) Описываем все изменения которые войдут в прод
+> 6) Ждём подтверждения от тимлида
+
+Либо просто делаем merge в main ветку из dev ветки.
+```bash
+git checkout main
+git merge dev
+```
+
+9. Удаляем свою ветку feature/your-name-of-feature
+
+Локально:
+
+```bash
+git branch -d feature/your-name-of-feature
+```
+Удалённо:
+```bash
+git push origin --delete feature/your-name-of-feature
+```
+
+## Технологии
+- React 19
+- TypeScript
+- Vite
+- ESLint
+- Docker
+- Yarn
+
+## Контакты
+Если у вас есть вопросы или предложения, вы можете обратиться по адресу telegram: [@mikey_semi](https://t.me/mikey_semi).
+
+Спасибо за интерес к проекту Equiply!
+
+Мы надеемся, что эта документация поможет вам начать работу и внести свой вклад в развитие платформы.

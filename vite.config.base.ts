@@ -8,9 +8,10 @@ const config = ({ mode }: ConfigEnv): UserConfig => {
     return {
         plugins: [react()],
         resolve: {
-            alias: {
-                "@": path.resolve(__dirname, "src"),
-            },
+            alias: [
+                { find: '@', replacement: path.resolve(__dirname, 'src') },
+                { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') }
+            ],
         },
         define: {
             'process.env.VITE_API_USERNAME': JSON.stringify(env.VITE_API_USERNAME),

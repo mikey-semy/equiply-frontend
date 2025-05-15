@@ -4,16 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "vite --config vite.config.dev.ts --host",
+    "build": "tsc -b && vite build --config vite.config.prod.ts",
+    "serve": "serve -s dist -l 3000",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "antd": "^5.25.1",
     "axios": "^1.9.0",
     "path": "^0.12.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sass-embedded": "^1.88.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

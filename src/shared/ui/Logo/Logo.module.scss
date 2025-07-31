@@ -1,5 +1,20 @@
 .logo {
   display: flex;
   align-items: center;
-  margin-right: 24px;
+  margin: var(--logo-margin);
+  font-size: var(--logo-font-size);
+  font-weight: var(--logo-font-weight);
+  color: var(--logo-color);
+  font-family: var(--logo-font);
+  text-decoration: none;
+  transition: color var(--transition-default);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
 }

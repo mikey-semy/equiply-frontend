@@ -7,14 +7,23 @@ import styles from './Header.module.scss';
 
 const { Header: AntHeader } = Layout;
 
-const items = [
-    { key: '1', label: 'Главная' },
-    { key: '2', label: 'Каталог' },
-    { key: '3', label: 'О нас' },
-];
+interface HeaderProps {
+    isAuthenticated: boolean;
+}
 
-export const Header: React.FC = () => {
+export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
     const { isDark, toggleTheme } = useTheme();
+
+    const items = isAuthenticated
+        ? [
+            { key: '1', label: 'Главная' },
+            { key: '2', label: 'Каталог' },
+            { key: '3', label: 'О нас' },
+        ]
+        : [
+            { key: '1', label: 'Вход' },
+            { key: '2', label: 'Регистрация' },
+        ];
 
     return (
         <AntHeader className={styles.header}>

@@ -1,0 +1,60 @@
+/**
+ * Переменные для форм (Login, FogotPassword и другие).
+ *
+ * Основные переменные форм:
+ * --form-background - Фон формы (наследуется от темы)
+ * --form-text-color - Цвет текста в форме (наследуется от темы)
+ * --form-border-radius - Радиус закругления формы
+ * --form-box-shadow - Тень формы
+ * --form-error-color - Цвет ошибок в форме
+ * --form-gap - Отступы между элементами формы
+ * --form-padding - Внутренние отступы формы
+ * --form-max-width - Максимальная ширина формы
+ *
+ * Переменные для элементов форм:
+ * --form-title-* - Стили заголовков форм
+ * --form-action-* - Стили контейнеров действий
+ * --form-error-* - Стили контейнеров ошибок
+ * --form-attempts-* - Стили контейнеров попыток
+ */
+:root {
+  /* Основные стили формы */
+  --form-background: var(--background-color);
+  --form-text-color: var(--text-color);
+  --form-border-radius: var(--border-radius);
+  --form-box-shadow: var(--box-shadow);
+  --form-error-color: var(--error-color);
+
+  /* Размеры и отступы */
+  --form-gap: 20px;
+  --form-padding: 40px;
+  --form-max-width: 400px;
+
+  /* Заголовки форм */
+  --form-title-height: 32px;
+  --form-title-font-size: 32px;
+  --form-title-font-weight: 600;
+  --form-title-color: var(--content-header-color);
+  --form-title-margin-bottom: 20px;
+
+  /* Контейнеры действий */
+  --form-action-gap: 10px;
+  --form-top-action-offset: 10px;
+
+  /* Контейнеры ошибок */
+  --form-error-font-size: 12px;
+  --form-empty-margin-bottom: 10px;
+  --form-empty-height: 40px;
+
+  /* Контейнеры попыток */
+  --form-attempts-bottom-offset: 10px;
+  --form-attempts-right-offset: 10px;
+  --form-attempts-font-size: 20px;
+  --form-attempts-font-weight: 500;
+  --form-attempts-color: var(--content-header-color);
+
+  /* Подсказки */
+  --form-hint-font-size: 14px;
+  --form-hint-color: var(--text-color);
+  --form-hint-margin-bottom: 10px;
+}

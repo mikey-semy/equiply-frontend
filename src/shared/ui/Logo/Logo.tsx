@@ -7,7 +7,7 @@ const { Title } = Typography;
 export const Logo: React.FC = () => {
     return (
         <div className={styles.logo}>
-            <Title level={4} style={{ margin: 0, color: 'white' }}>Equiply</Title>
+            <Title level={4} style={{ margin: 0 }}>Equiply</Title>
         </div>
     );
 };

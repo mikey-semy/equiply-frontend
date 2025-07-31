@@ -33,7 +33,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 theme={{
                     algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
                     token: {
-                        colorPrimary: '#1890ff',
+                        colorPrimary: 'var(--primary-color)',
+                        colorBgBase: 'var(--background-color)',
+                        colorTextBase: 'var(--text-color)',
+                        colorBgContainer: 'var(--background-color)',
+                        borderRadius: 6,
                     },
                 }}
             >

@@ -1,0 +1,24 @@
+/**
+ * Основные стили приложения.
+ * Порядок импорта:
+ * 1. global.scss — сброс стилей
+ * 2. variables.scss — базовые переменные
+ * 3. forms.scss — переменные для форм
+ * 4. themes/light.scss — светлая тема по умолчанию
+ */
+@import "./global.scss";
+@import "./variables.scss";
+@import "./forms.scss";
+@import "./themes/light.scss";
+
+body {
+}
+
+a {
+}
+
+header {
+}
+
+footer {
+}

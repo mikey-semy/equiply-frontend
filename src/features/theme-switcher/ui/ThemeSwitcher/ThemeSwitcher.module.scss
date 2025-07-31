@@ -1,3 +1,11 @@
 .switcher {
-  margin-left: 16px;
+  margin: var(--theme-switcher-margin);
+
+  .switch {
+    background-color: var(--button-background);
+
+    &:hover {
+      background-color: var(--primary-color);
+    }
+  }
 }

@@ -8,7 +8,11 @@
   font-family: var(--logo-font);
   text-decoration: none;
   transition: color var(--transition-default);
-
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
   &:hover {
     opacity: 0.8;
   }
@@ -16,5 +20,9 @@
   &:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+  }
+
+  & :global(.ant-typography) {
+    color: var(--logo-color);
   }
 }

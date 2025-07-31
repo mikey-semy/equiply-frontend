@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
+import '@ant-design/v5-patch-for-react-19';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { Header } from '@/widgets/header/ui/Header/Header';
 import './styles/index.scss'

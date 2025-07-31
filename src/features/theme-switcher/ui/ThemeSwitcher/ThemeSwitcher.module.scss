@@ -2,7 +2,7 @@
   margin: var(--theme-switcher-margin);
 
   .switch {
-    background-color: var(--button-background);
+    background-color: var(--theme-switcher-bg, var(--button-background));
 
     &:hover {
       background-color: var(--primary-color);

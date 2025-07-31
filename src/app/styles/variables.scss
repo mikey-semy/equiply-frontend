@@ -3,4 +3,14 @@
  * Используются во всех компонентах и темах.
  */
 :root {
+  --transition-default: 0.2s;
+  --logo-margin: 0 16px;
+  --logo-font-size: 2rem;
+  --logo-font-weight: 700;
+  --logo-font: 'Segoe UI', 'Arial', sans-serif;
+  --theme-switcher-margin: 0 16px;
+  --header-height: 64px;
+  --header-padding: 0 32px;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }

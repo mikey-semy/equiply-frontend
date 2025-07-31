@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import { ThemeSwitcher } from '@/features/theme-switcher/ui/ThemeSwitcher/ThemeSwitcher';
@@ -13,6 +13,15 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
     const { isDark, toggleTheme } = useTheme();
+    const [isFading, setIsFading] = useState(false);
+
+    const handleThemeSwitch = () => {
+        setIsFading(true);
+        setTimeout(() => {
+            toggleTheme();
+            setTimeout(() => setIsFading(false), 250);
+        }, 250);
+    };
 
     const items = isAuthenticated
         ? [
@@ -29,13 +38,13 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
         <AntHeader className={styles.header}>
             <Logo />
             <Menu
-                theme="dark"
+                theme={isDark ? 'dark' : 'light'}
                 mode="horizontal"
                 defaultSelectedKeys={['1']}
                 items={items}
-                className={styles.menu}
+                className={`${styles.menu} menu-fade${isFading ? ' menu-fade-out' : ''}`}
             />
-            <ThemeSwitcher isDark={isDark} onChange={toggleTheme} />
+            <ThemeSwitcher isDark={isDark} onChange={handleThemeSwitch} />
         </AntHeader>
     );
 };

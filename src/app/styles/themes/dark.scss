@@ -1,6 +1,21 @@
 /**
  * Переменные для темной темы.
  */
-:root {
-
+.dark-theme {
+  --primary-color: #1677ff;
+  --logo-color: #fff;
+  --button-background: #23272e;
+  --button-color: #fff;
+  --input-background: #23272e;
+  --input-color: #fff;
+  --background-color: #161b22;
+  --page-background: #161b22;
+  --text-color: #fff;
+  --header-background: #23272e;
+  --header-text-color: #fff;
+  --menu-background: #23272e;
+  --theme-switcher-bg: #23272e;
+  --menu-active-bg: #23272e;
+  --menu-active-color: #1677ff;
+  --menu-active-underline: #1677ff;
 }

@@ -10,10 +10,44 @@
   box-shadow: var(--box-shadow);
   display: flex;
   align-items: center;
-  transition: background-color var(--transition-default);
+  transition: background-color 0.3s, color 0.3s;
 
   .menu {
     flex: 1;
     min-width: 0;
+    transition: background-color 0.3s, color 0.3s;
+
+    :global(.ant-menu-item) {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    :global(.ant-menu-item-selected) {
+      color: var(--menu-active-color) !important;
+      background: var(--menu-active-bg, transparent) !important;
+      border-bottom: none !important;
+    }
+    :global(.ant-menu-item-selected)::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 32px;
+      height: 2px;
+      background: var(--menu-active-underline);
+      border-radius: 1px;
+      transform: translateX(-50%);
+      transition: background 0.3s;
+    }
+
+    // Fade effect
+    &.menu-fade {
+      transition: opacity 0.25s;
+      opacity: 1;
+    }
+    &.menu-fade-out {
+      opacity: 0;
+    }
   }
 }

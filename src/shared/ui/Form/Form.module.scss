@@ -1,270 +1,274 @@
 // Базовые стили для всех форм авторизации
 %form-page-base {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 100%;
-    padding: 20px;
-    background-color: var(--background-color);
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  padding: 20px;
+  background-color: var(--background-color);
+  box-sizing: border-box;
 }
 
 %form-container-base {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 20px;
-    width: 100%;
-    min-height: 520px;
-    max-width: 400px;
-    padding: 40px;
-    background: var(--content-background);
-    border-radius: var(--border-radius-default);
-    box-shadow: var(--box-shadow-default);
-    transition: box-shadow 0.6s ease;
-    box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  width: 100%;
+  min-height: 520px;
+  max-width: 400px;
+  padding: 40px;
+  background: var(--content-background);
+  border-radius: var(--border-radius-default);
+  box-shadow: var(--box-shadow-default);
+  transition: box-shadow 0.6s ease;
+  box-sizing: border-box;
 
-    &.hasError {
-        box-shadow: 0 0 10px var(--error-color), var(--box-shadow-default);
+  &.hasError {
+    box-shadow: 0 0 10px var(--error-color), var(--box-shadow-default);
+  }
+
+  @media (max-width: 768px) {
+    max-width: 90%;
+    padding: 30px 20px;
+    min-height: 480px;
+    gap: 18px;
+  }
+
+  // Стили для обычных Input
+  :global(.ant-input:not(.ant-input-password .ant-input)) {
+    height: 40px !important;
+    background-color: var(--input-background) !important;
+    color: var(--input-color) !important;
+    border: 1px solid rgba(217, 217, 217, 0.5) !important;
+    border-radius: 6px !important;
+    padding: 0 11px !important; // Унифицированный padding
+
+    &::placeholder {
+      color: var(--input-color) !important;
+      opacity: 0.6 !important;
     }
 
-    @media (max-width: 768px) {
-        max-width: 90%;
-        padding: 30px 20px;
-        min-height: 480px;
-        gap: 18px;
+    &:focus {
+      background-color: var(--input-background) !important;
+      color: var(--input-color) !important;
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2) !important;
     }
 
-    // Стили для обычных Input
-    :global(.ant-input:not(.ant-input-password .ant-input)) {
-        height: 40px !important;
-        background-color: var(--input-background) !important;
-        color: var(--input-color) !important;
-        border: 1px solid rgba(217, 217, 217, 0.5) !important;
-        border-radius: 6px !important;
-        padding: 0 11px !important; // Унифицированный padding
-        
-        &::placeholder {
-            color: var(--input-color) !important;
-            opacity: 0.6 !important;
-        }
-        
-        &:focus {
-            background-color: var(--input-background) !important;
-            color: var(--input-color) !important;
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2) !important;
-        }
-        
-        &:hover {
-            border-color: var(--primary-color) !important;
-        }
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+  }
+
+  // Стили для Input.Password контейнера
+  :global(.ant-input-password) {
+    height: 40px !important;
+    background-color: var(--input-background) !important;
+    border: 1px solid rgba(217, 217, 217, 0.5) !important;
+    border-radius: 6px !important;
+    padding: 0 !important; // Убираем лишний padding
+    display: flex !important;
+    align-items: center !important;
+
+    &:focus-within {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2) !important;
     }
 
-    // Стили для Input.Password контейнера
-    :global(.ant-input-password) {
-        height: 40px !important;
-        background-color: var(--input-background) !important;
-        border: 1px solid rgba(217, 217, 217, 0.5) !important;
-        border-radius: 6px !important;
-        padding: 0 !important; // Убираем лишний padding
-        display: flex !important;
-        align-items: center !important;
-        
-        &:focus-within {
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2) !important;
-        }
-        
-        &:hover {
-            border-color: var(--primary-color) !important;
-        }
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+  }
+
+  // Стили для Input внутри Input.Password
+  :global(.ant-input-password .ant-input) {
+    background-color: transparent !important;
+    color: var(--input-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    height: 100% !important; // Заполняем всю высоту контейнера
+    padding: 0 11px !important; // Такой же padding как у обычного input
+    margin: 0 !important;
+    line-height: 38px !important; // Выравниваем по центру
+
+    &::placeholder {
+      color: var(--input-color) !important;
+      opacity: 0.6 !important;
+      line-height: 38px !important; // Выравниваем плейсхолдер
     }
 
-    // Стили для Input внутри Input.Password
-    :global(.ant-input-password .ant-input) {
-        background-color: transparent !important;
-        color: var(--input-color) !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-        height: 100% !important; // Заполняем всю высоту контейнера
-        padding: 0 11px !important; // Такой же padding как у обычного input
-        margin: 0 !important;
-        line-height: 38px !important; // Выравниваем по центру
-        
-        &::placeholder {
-            color: var(--input-color) !important;
-            opacity: 0.6 !important;
-            line-height: 38px !important; // Выравниваем плейсхолдер
-        }
-        
-        &:focus {
-            border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
-            background-color: transparent !important;
-        }
-        
-        &:hover {
-            border: none !important;
-            background-color: transparent !important;
-        }
+    &:focus {
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      background-color: transparent !important;
     }
 
-    // Стили для иконки показать/скрыть пароль
-    :global(.ant-input-password .ant-input-suffix) {
-        color: var(--input-color) !important;
-        padding-right: 11px !important; // Выравниваем с общим padding
-        display: flex !important;
-        align-items: center !important;
-        height: 100% !important;
-        
-        .ant-input-password-icon {
-            color: var(--input-color) !important;
-            opacity: 0.6;
-            
-            &:hover {
-                opacity: 1;
-            }
-        }
+    &:hover {
+      border: none !important;
+      background-color: transparent !important;
+    }
+  }
+
+  // Стили для иконки показать/скрыть пароль
+  :global(.ant-input-password .ant-input-suffix) {
+    color: var(--input-color) !important;
+    padding-right: 11px !important; // Выравниваем с общим padding
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+
+    .ant-input-password-icon {
+      color: var(--input-color) !important;
+      opacity: 0.6;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Стили для Ant Design Button
+  :global(.ant-btn) {
+    height: 40px !important;
+    background-color: var(--button-background) !important;
+    color: var(--button-color) !important;
+    border: 1px solid rgba(217, 217, 217, 0.5) !important;
+    border-radius: 6px !important;
+
+    &:hover {
+      background-color: var(--button-background) !important;
+      color: var(--button-color) !important;
+      opacity: 0.8;
+      border-color: var(--primary-color) !important;
     }
 
-    // Стили для Ant Design Button
-    :global(.ant-btn) {
-        height: 40px !important;
-        background-color: var(--button-background) !important;
-        color: var(--button-color) !important;
-        border: 1px solid rgba(217, 217, 217, 0.5) !important;
-        border-radius: 6px !important;
-        
-        &:hover {
-            background-color: var(--button-background) !important;
-            color: var(--button-color) !important;
-            opacity: 0.8;
-            border-color: var(--primary-color) !important;
-        }
-        
-        &.ant-btn-primary {
-            background-color: var(--primary-color) !important;
-            color: #fff !important;
-            border-color: var(--primary-color) !important;
-            
-            &:hover {
-                background-color: var(--primary-color) !important;
-                color: #fff !important;
-                opacity: 0.9;
-                border-color: var(--primary-color) !important;
-            }
-        }
-        
-        &:disabled {
-            opacity: 0.5 !important;
-            cursor: not-allowed !important;
-            
-            &:hover {
-                border-color: rgba(217, 217, 217, 0.5) !important;
-                opacity: 0.5 !important;
-            }
-        }
+    &.ant-btn-primary {
+      background-color: var(--primary-color) !important;
+      color: #fff !important;
+      border-color: var(--primary-color) !important;
+
+      &:hover {
+        background-color: var(--primary-color) !important;
+        color: #fff !important;
+        opacity: 0.9;
+        border-color: var(--primary-color) !important;
+      }
     }
+
+    &:disabled {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+
+      &:hover {
+        border-color: rgba(217, 217, 217, 0.5) !important;
+        opacity: 0.5 !important;
+      }
+    }
+  }
 }
 
 %form-title-base {
-    height: 80px;
-    font-family: var(--logo-font);
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--content-header-color);
-    text-align: center;
-    margin-bottom: 0;
-    user-select: none;
-    -webkit-user-drag: none;
-    -webkit-tap-highlight-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.2;
+  height: 80px;
+  font-family: var(--logo-font);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--content-header-color);
+  text-align: center;
+  margin-bottom: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
 
-    @media (max-width: 768px) {
-        font-size: 24px;
-        height: 70px;
-    }
+  @media (max-width: 768px) {
+    font-size: 24px;
+    height: 70px;
+  }
 }
 
 %form-inputs-container-base {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-height: 100px;
 }
 
 %form-message-container-base {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 40px;
-    font-family: var(--font-default);
-    font-size: 12px;
-    text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  font-family: var(--font-default);
+  font-size: 12px;
+  text-align: center;
 }
 
 %form-action-base {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-    width: 100%;
-    min-height: 80px;
-    margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+  margin-top: auto;
 }
 
 %form-button-base {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200px;
-    height: 40px;
-    margin: 0;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-family: var(--font-default);
-    
-    @media (max-width: 480px) {
-        width: 100%;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 40px;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: var(--font-default);
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
 }
 
 %form-link-base {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 14px;
-    font-family: var(--font-default);
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-    
-    &:hover {
-        opacity: 0.8;
-        text-decoration: underline;
-    }
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 14px;
+  font-family: var(--font-default);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
 }
 
 %empty-container-base {
-    @extend %form-message-container-base;
+  @extend %form-message-container-base;
 }
 
 %error-container-base {
-    @extend %form-message-container-base;
-    color: var(--error-color);
+  @extend %form-message-container-base;
+  color: var(--error-color);
 }
 
 %form-top-action-base {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }

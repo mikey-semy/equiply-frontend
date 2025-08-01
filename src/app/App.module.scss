@@ -22,12 +22,12 @@
   color: var(--content-text-color);
 }
 
-/* Стили для обычных страниц (не логин) */
+/* Стили для обычных страниц */
 .regularPageContent {
   padding: 24px 48px;
   align-items: flex-start;
   justify-content: flex-start;
-  
+
   @media (max-width: 768px) {
     padding: 24px 20px;
   }

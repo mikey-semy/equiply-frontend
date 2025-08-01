@@ -9,9 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.scss';
 import { Input, Button } from 'antd';
 import { login } from './Login.api';
+import { getErrorMessage } from '@/shared/api/api.handlers';
+import { ApiError } from '@/shared/api/api.types';
 
 const MAX_ATTEMPTS = 5; // Максимальное количество попыток
-const BLOCK_TIME = 300000; // Время блокировки (5 минут)
+const BLOCK_TIME = 3//300000; // Время блокировки (5 минут)
 
 /**
  * Компонент LoginPage
@@ -57,7 +59,8 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await login({ username, password });
-            if (response?.access_token) {
+
+            if (response?.success) {
                 localStorage.setItem('loginAttempts', '0');
                 setAttempts(0);
                 setError('');
@@ -67,14 +70,22 @@ const LoginPage: React.FC = () => {
             }
         } catch (err: unknown) {
             console.error('Ошибка входа:', err);
+            if (err && typeof err === 'object' && 'error' in err) {
+                const apiError = (err as { error: ApiError }).error;
+                setError(getErrorMessage(apiError));
+            } else if (err && typeof err === 'object' && 'error_type' in err) {
+                // Если ошибка пришла напрямую (не в wrapper'е)
+                setError(getErrorMessage(err as ApiError));
+            } else {
+                setError('Произошла ошибка.');
+            }
+
             const newAttempts = attempts + 1;
             setAttempts(newAttempts);
             localStorage.setItem('loginAttempts', String(newAttempts));
 
             if (newAttempts >= MAX_ATTEMPTS) {
                 block();
-            } else {
-                setError('Произошла ошибка.');
             }
         }
     };
@@ -97,7 +108,7 @@ const LoginPage: React.FC = () => {
                 } else {
                     setIsBlocked(true);
                     const remainingSeconds = Math.ceil(remaining / 1000);
-                    setRemainingTimeDisplay(`Попробуйте через ${remainingSeconds} секунд`);
+                    setRemainingTimeDisplay(`${remainingSeconds}`);
                 }
             }
         };
@@ -152,11 +163,17 @@ const LoginPage: React.FC = () => {
                         Войти
                     </Button>
 
-                    <a 
+                    <a
                         onClick={() => navigate('/forgot-password')}
                         className={styles.forgotPasswordLink}
                     >
                         Забыли пароль?
+                    </a>
+                    <a
+                        onClick={() => navigate('/signup')}
+                        className={styles.signupLink}
+                    >
+                        Нет аккаунта? Зарегистрироваться
                     </a>
 
                 </div>

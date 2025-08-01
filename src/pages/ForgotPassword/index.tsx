@@ -50,7 +50,7 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
 
                 <h1 className={styles.forgotPasswordTitle}>Куда отправить пароль?</h1>
-                
+
                 {!isSuccess ? (
                     <>
                         <div className={styles.inputsContainer}>
@@ -86,8 +86,8 @@ const ForgotPasswordPage: React.FC = () => {
                                 Отправить
                             </Button>
 
-                            <a 
-                                onClick={() => navigate('/login')}
+                            <a
+                                onClick={() => navigate('/signin')}
                                 className={styles.backToLoginLink}
                             >
                                 Вернуться к входу
@@ -99,7 +99,7 @@ const ForgotPasswordPage: React.FC = () => {
                         <div className={styles.inputsContainer}>
                             {/* Пустая область для сохранения структуры */}
                         </div>
-                        
+
                         <div className={styles.messageContainer}>
                             <div className={styles.successMessage}>
                                 Инструкции отправлены на ваш email
@@ -108,7 +108,7 @@ const ForgotPasswordPage: React.FC = () => {
 
                         <div className={styles.formAction}>
                             <Button
-                                onClick={() => navigate('/login')}
+                                onClick={() => navigate('/signin')}
                                 title="Вернуться к входу"
                                 className={styles.forgotPasswordButton}
                             >

@@ -5,6 +5,7 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 import App from './index';
+import Registration from '@/pages/Registration';
 import Login from '@/pages/Login';
 import ForgotPassword from '@/pages/ForgotPassword';
 import Dashboard from '@/pages/Dashboard';
@@ -13,16 +14,20 @@ import Error from '@/pages/Error';
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />, // Общий макет с Header
+        element: <App />,
         errorElement: <Error />,
         children: [
             {
-                path: '/login',
-                element: <Login />, // Login как дочерний маршрут
+                path: '/signup',
+                element: <Registration />,
+            },
+            {
+                path: '/signin',
+                element: <Login />,
             },
             {
                 path: '/forgot-password',
-                element: <ForgotPassword />, // ForgotPassword как дочерний маршрут
+                element: <ForgotPassword />,
             },
             {
                 path: '/',

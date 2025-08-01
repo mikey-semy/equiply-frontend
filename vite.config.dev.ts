@@ -5,6 +5,16 @@ export default defineConfig((env) => ({
     ...baseConfig(env),
     server: {
         proxy: {
+            '/api': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                secure: false
+            },
+            '/media': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                secure: false
+            },
             '/auth': {
                 target: 'http://localhost:8000',
                 changeOrigin: true,

@@ -23,9 +23,9 @@ api.interceptors.response.use(
     error => {
         if (error.response?.status === 401
             && !error.response.config.url?.includes('password')
-            && window.location.pathname !== '/login') {
+            && window.location.pathname !== '/signin') {
             localStorage.removeItem('token');
-            window.location.href = '/login';
+            window.location.href = '/signin';
         }
         return Promise.reject(error);
     }

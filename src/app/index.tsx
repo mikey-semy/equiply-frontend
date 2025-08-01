@@ -12,7 +12,7 @@ const { Content, Footer } = Layout;
 const App: React.FC = () => {
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const isAuthPage = ['/login', '/forgot-password'].includes(location.pathname);
+    const isAuthPage = ['/signin', '/forgot-password'].includes(location.pathname);
     useEffect(() => {
         const token = document.cookie
             .split('; ')
@@ -21,7 +21,7 @@ const App: React.FC = () => {
             setIsAuthenticated(true);
         } else {
             setIsAuthenticated(false);
-            navigate('/login');
+            navigate('/signin');
         }
     }, [navigate]);
 

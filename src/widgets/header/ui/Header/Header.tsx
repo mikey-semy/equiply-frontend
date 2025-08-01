@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import { ThemeSwitcher } from '@/features/theme-switcher/ui/ThemeSwitcher/ThemeSwitcher';
 import { useTheme } from '@/app/providers/ThemeProvider';
@@ -14,6 +15,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
     const { isDark, toggleTheme } = useTheme();
     const [isFading, setIsFading] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleThemeSwitch = () => {
         setIsFading(true);
@@ -23,15 +26,69 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
         }, 250);
     };
 
+    const handleMenuClick = (key: string) => {
+        switch (key) {
+            case 'home':
+                navigate('/');
+                break;
+            case 'signin':
+                navigate('/signin');
+                break;
+            case 'signup':
+                navigate('/signup');
+                break;
+            case 'catalog':
+                // TODO: Добавить страницу каталога
+                break;
+            case 'about':
+                // TODO: Добавить страницу о нас
+                break;
+        }
+    };
+
+    // Определяем активный пункт меню на основе текущего пути
+    const getSelectedKey = () => {
+        if (location.pathname === '/signin') {
+            return ['signin'];
+        }
+        if (location.pathname === '/signup') {
+            return ['signup'];
+        }
+        if (location.pathname === '/') {
+            return ['home'];
+        }
+        return ['home'];
+    };
+
     const items = isAuthenticated
         ? [
-            { key: '1', label: 'Главная' },
-            { key: '2', label: 'Каталог' },
-            { key: '3', label: 'О нас' },
+            {
+                key: 'home',
+                label: 'Главная',
+                onClick: () => handleMenuClick('home')
+            },
+            {
+                key: 'catalog',
+                label: 'Каталог',
+                onClick: () => handleMenuClick('catalog')
+            },
+            {
+                key: 'about',
+                label: 'О нас',
+                onClick: () => handleMenuClick('about')
+            },
         ]
         : [
-            { key: '1', label: 'Вход' },
-            { key: '2', label: 'Регистрация' },
+            {
+                key: 'signin',
+                label: 'Вход',
+                onClick: () => handleMenuClick('signin')
+            },
+            {
+                key: 'signup',
+                label: 'Регистрация',
+                onClick: () => handleMenuClick('signup')
+            },
         ];
 
     return (
@@ -40,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
             <Menu
                 theme={isDark ? 'dark' : 'light'}
                 mode="horizontal"
-                defaultSelectedKeys={['1']}
+                selectedKeys={getSelectedKey()}
                 items={items}
                 className={`${styles.menu} menu-fade${isFading ? ' menu-fade-out' : ''}`}
             />

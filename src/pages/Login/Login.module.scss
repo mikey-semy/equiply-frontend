@@ -1,62 +1,94 @@
-@use '@/shared/ui/Form/Form.module.scss' as form;
+@use "@/shared/ui/Form/Form.module.scss" as form;
 
 .loginPage {
-    @extend %form-page-base;
+  @extend %form-page-base;
 }
 
 .formLogin {
-    @extend %form-container-base;
+  @extend %form-container-base;
 }
 
 .loginTitle {
-    @extend %form-title-base;
+  @extend %form-title-base;
 }
 
 .inputsContainer {
-    @extend %form-inputs-container-base;
+  @extend %form-inputs-container-base;
 }
 
 .messageContainer {
-    @extend %form-message-container-base;
+  @extend %form-message-container-base;
 }
 
 .formLoginAction {
-    @extend %form-action-base;
+  @extend %form-action-base;
 }
 
 .loginButton {
-    @extend %form-button-base;
+  @extend %form-button-base;
 }
 
 .forgotPasswordLink {
-    @extend %form-link-base;
+  @extend %form-link-base;
 }
 
 .emptyContainer {
-    @extend %empty-container-base;
+  @extend %empty-container-base;
 }
 
 .errorContainer {
-    @extend %error-container-base;
+  @extend %error-container-base;
 }
 
 .formTopAction {
-    @extend %form-top-action-base;
+  @extend %form-top-action-base;
 }
 
 .attemptsContainer {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    font-size: 20px;
-    font-weight: 500;
-    font-family: var(--logo-font);
-    color: var(--content-header-color);
-    user-select: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: var(--logo-font);
+  color: var(--content-header-color);
+  user-select: none;
 
-    @media (max-width: 768px) {
-        font-size: 16px;
-        bottom: 5px;
-        right: 5px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    bottom: 5px;
+    right: 5px;
+  }
+}
+
+.validationError {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.inputsContainer {
+  // ...existing code...
+
+  :global(.ant-input-status-success) {
+    border-color: #52c41a;
+
+    &:focus,
+    &:hover {
+      border-color: #52c41a;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
     }
+  }
+
+  :global(.ant-input-status-error) {
+    border-color: #ff4d4f;
+
+    &:focus,
+    &:hover {
+      border-color: #ff4d4f;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+    }
+  }
 }

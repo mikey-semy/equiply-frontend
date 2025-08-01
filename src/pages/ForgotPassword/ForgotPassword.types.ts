@@ -1,6 +1,6 @@
 /**
  * Тип данных для запроса восстановления пароля.
  */
-export type FogotPasswordRequest = {
+export type ForgotPasswordRequest = {
     email: string;
 };

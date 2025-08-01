@@ -113,40 +113,54 @@ const LoginPage: React.FC = () => {
                 onSubmit={handleLogin}
                 className={`${styles.formLogin} ${error ? styles.hasError : ''}`}
             >
+                <div className={styles.formTopAction}>
+                    {/* Кнопка для переключения темы */}
+                </div>
+
                 <h1 className={styles.loginTitle}>Equiply Access</h1>
-                <Input
-                    placeholder="Имя пользователя"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={{ marginBottom: 10 }}
-                />
-                <Input.Password
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{ marginBottom: 10 }}
-                />
-                {error ? (
-                    <div className={styles.errorContainer}>{error}</div>
-                ) : (
-                    <div className={styles.emptyContainer} />
-                )}
+
+                <div className={styles.inputsContainer}>
+                    <Input
+                        placeholder="Имя пользователя"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+
+                    <Input.Password
+                        placeholder="Пароль"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                <div className={styles.messageContainer}>
+                    {error ? (
+                        <div className={styles.errorContainer}>{error}</div>
+                    ) : (
+                        <div className={styles.emptyContainer} />
+                    )}
+                </div>
+
                 <div className={styles.formLoginAction}>
                     <Button
                         htmlType="submit"
                         type="primary"
                         title="Войти"
                         disabled={isBlocked || !username || !password}
+                        className={styles.loginButton}
                     >
                         Войти
                     </Button>
-                    <Button
+
+                    <a 
                         onClick={() => navigate('/forgot-password')}
-                        title="Забыли пароль?"
+                        className={styles.forgotPasswordLink}
                     >
                         Забыли пароль?
-                    </Button>
+                    </a>
+
                 </div>
+
                 {isBlocked && (
                     <div className={styles.attemptsContainer}>
                         {remainingTimeDisplay}

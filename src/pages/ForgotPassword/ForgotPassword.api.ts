@@ -1,6 +1,6 @@
 import api from '@/shared/api/api';
 import { handleApiResponse, handleApiError } from '@/shared/api/api.handlers';
-import { FogotPasswordRequest } from './FogotPassword.types';
+import { ForgotPasswordRequest } from './ForgotPassword.types';
 
 /**
  * Выполняет запрос на восстановление пароля.
@@ -9,9 +9,9 @@ import { FogotPasswordRequest } from './FogotPassword.types';
  * @returns Promise<void> - Успешный ответ или ошибка.
  *
  * @example
- * await FogotPassword({ email: 'user@example.com' });
+ * await ForgotPassword({ email: 'user@example.com' });
  */
-export const FogotPassword = async (data: FogotPasswordRequest): Promise<void> => {
+export const ForgotPassword = async (data: ForgotPasswordRequest): Promise<void> => {
     try {
         const response = await api.post('/api/v1/auth/forgot-password', data);
         handleApiResponse(response);

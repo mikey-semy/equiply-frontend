@@ -1,5 +1,5 @@
 /**
- * Переменные для форм (Login, FogotPassword и другие).
+ * Переменные для форм (Login, ForgotPassword и другие).
  *
  * Основные переменные форм:
  * --form-background - Фон формы (наследуется от темы)
@@ -62,5 +62,5 @@
   --form-input-background: var(--input-background);
   --form-input-color: var(--input-color);
   --form-button-background: var(--button-background);
-  --form-button-color: var(--text-color);
+  --form-button-color: var(--button-color);
 }

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import App from './index';
 import Login from '@/pages/Login';
-import FogotPassword from '@/pages/FogorPassword';
+import ForgotPassword from '@/pages/ForgotPassword';
 import Dashboard from '@/pages/Dashboard';
 import Error from '@/pages/Error';
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/forgot-password',
-                element: <FogotPassword />, // FogotPassword как дочерний маршрут
+                element: <ForgotPassword />, // ForgotPassword как дочерний маршрут
             },
             {
                 path: '/',

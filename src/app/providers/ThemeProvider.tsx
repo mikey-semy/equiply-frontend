@@ -39,6 +39,36 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                         colorTextBase: 'var(--text-color)',
                         colorBgContainer: 'var(--background-color)',
                         borderRadius: 6,
+                        // Токены для Dropdown
+                        colorBgElevated: isDark ? '#1f1f1f' : '#ffffff',
+                        colorText: isDark ? 'rgba(255,255,255,0.88)' : 'rgba(0,0,0,0.88)',
+                        colorTextDescription: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
+                        colorIcon: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
+                        colorSplit: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(5,5,5,0.06)',
+                        controlItemBgHover: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+                        controlItemBgActive: isDark ? '#177ddc' : '#e6f4ff',
+                        controlItemBgActiveHover: isDark ? '#1890ff' : '#bae0ff',
+                        boxShadowSecondary: isDark
+                            ? '0 6px 16px 0 rgba(0, 0, 0, 0.32), 0 3px 6px -4px rgba(0, 0, 0, 0.24), 0 9px 28px 8px rgba(0, 0, 0, 0.20)'
+                            : '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+                        borderRadiusLG: 8,
+                        borderRadiusSM: 4,
+                        borderRadiusXS: 2,
+                        lineHeight: 1.5714285714285714,
+                        lineWidthFocus: 3,
+                        marginXS: 8,
+                        marginXXS: 4,
+                        motionDurationMid: '0.2s',
+                        motionEaseInOutCirc: 'cubic-bezier(0.78, 0.14, 0.15, 0.86)',
+                        motionEaseInQuint: 'cubic-bezier(0.755, 0.05, 0.855, 0.06)',
+                        motionEaseOutCirc: 'cubic-bezier(0.08, 0.82, 0.17, 1)',
+                        motionEaseOutQuint: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                        padding: 16,
+                        paddingXS: 8,
+                        paddingXXS: 4,
+                        sizePopupArrow: 16,
+                        controlPaddingHorizontal: 12,
+                        fontSizeIcon: 12,
                     },
                     components: {
                         Layout: {
@@ -74,6 +104,23 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                             groupTitleColor: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.45)',
                             iconSize: 16,
                             iconMarginInlineEnd: 10,
+                        },
+                        Dropdown: {
+                            // Специфические токены для Dropdown
+                            colorBgElevated: isDark ? '#1f1f1f' : '#ffffff',
+                            colorText: isDark ? 'rgba(255,255,255,0.88)' : 'rgba(0,0,0,0.88)',
+                            colorTextDescription: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
+                            controlItemBgHover: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+                            controlItemBgActive: isDark ? '#177ddc' : '#e6f4ff',
+                            controlItemBgActiveHover: isDark ? '#1890ff' : '#bae0ff',
+                            boxShadowSecondary: isDark
+                                ? '0 6px 16px 0 rgba(0, 0, 0, 0.32), 0 3px 6px -4px rgba(0, 0, 0, 0.24), 0 9px 28px 8px rgba(0, 0, 0, 0.20)'
+                                : '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+                            borderRadiusLG: 8,
+                            paddingBlock: 6,
+                            fontSize: 14,
+                            lineHeight: 1.5714285714285714,
+                            motionDurationMid: '0.2s',
                         },
                     },
                 }}

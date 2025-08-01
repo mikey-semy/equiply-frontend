@@ -102,6 +102,18 @@ const RegistrationPage: React.FC = () => {
             if (response?.success && response.data) {
                 // Пользователь всегда попадает на главную страницу после регистрации
                 // Токены уже установлены (в cookies для десктопа, в JSON для мобильных)
+
+                // Для мобильных устройств сохраняем токены в localStorage
+                // (для десктопа они автоматически сохраняются в cookies)
+                if (response.data.access_token && response.data.refresh_token) {
+                    localStorage.setItem('access_token', response.data.access_token);
+                    localStorage.setItem('refresh_token', response.data.refresh_token);
+                }
+
+                // Уведомляем приложение об изменении аутентификации
+                // Это нужно для обновления состояния в других компонентах
+                window.dispatchEvent(new Event('auth-change'));
+
                 navigate('/', {
                     state: {
                         message: response.message, // "Регистрация завершена. Подтвердите email для полного доступа."

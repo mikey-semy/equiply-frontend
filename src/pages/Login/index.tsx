@@ -11,6 +11,7 @@ import { Input, Button } from 'antd';
 import { login } from './Login.api';
 import { getErrorMessage } from '@/shared/api/api.handlers';
 import { ApiError } from '@/shared/api/api.types';
+import { isMobileDevice } from '@/shared/api/api.utils';
 
 const MAX_ATTEMPTS = 5; // Максимальное количество попыток
 const BLOCK_TIME = 3//300000; // Время блокировки (5 минут)
@@ -60,10 +61,45 @@ const LoginPage: React.FC = () => {
         try {
             const response = await login({ username, password });
 
+            console.log('=== Login Debug ===');
+            console.log('Login response:', response);
+            console.log('isMobileDevice:', isMobileDevice());
+            console.log('Cookies before saving:', document.cookie);
+            console.log('LocalStorage before saving:', localStorage.getItem('access_token'));
+
             if (response?.success) {
                 localStorage.setItem('loginAttempts', '0');
                 setAttempts(0);
                 setError('');
+
+                // Для мобильных устройств сохраняем токены в localStorage
+                // (для десктопа они автоматически сохраняются в cookies)
+                if (response.access_token && response.refresh_token) {
+
+                    console.log('Response has tokens, saving to localStorage:', {
+                        access_token: response.access_token,
+                        refresh_token: response.refresh_token
+                    });
+
+                    localStorage.setItem('access_token', response.access_token);
+                    localStorage.setItem('refresh_token', response.refresh_token);
+                } else {
+                    console.log('No tokens in response - should be in cookies for desktop');
+                    console.log('Response data:', {
+                        access_token: response.access_token,
+                        refresh_token: response.refresh_token,
+                        token_type: response.token_type,
+                        expires_in: response.expires_in
+                    });
+                }
+
+                console.log('Cookies after login:', document.cookie);
+                console.log('LocalStorage after login:', localStorage.getItem('access_token'));
+                console.log('=== End Login Debug ===');
+
+                // Уведомляем приложение об изменении аутентификации
+                window.dispatchEvent(new Event('auth-change'));
+
                 navigate('/');
             } else {
                 setError('Неверные учетные данные.');

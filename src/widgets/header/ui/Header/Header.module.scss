@@ -18,27 +18,38 @@
     transition: background-color 0.3s, color 0.3s;
 
     :global(.ant-menu-item) {
-      display: flex;
-      align-items: center;
+      display: flex !important;
+      align-items: center !important;
       position: relative;
+      gap: 4px;
+
+      .anticon {
+        font-size: 16px;
+        min-width: 16px;
+        flex-shrink: 0;
+      }
     }
+
     :global(.ant-menu-item-selected) {
       color: var(--menu-active-color) !important;
       background: var(--menu-active-bg, transparent) !important;
       border-bottom: none !important;
+
+      .anticon {
+        color: var(--menu-active-color) !important;
+      }
     }
+
     :global(.ant-menu-item-selected)::after {
-      content: "";
-      display: block;
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 32px;
-      height: 2px;
-      background: var(--menu-active-underline);
-      border-radius: 1px;
-      transform: translateX(-50%);
-      transition: background 0.3s;
+      content: "" !important;
+      position: absolute !important;
+      bottom: 0px !important;
+      left: 4px !important;
+      right: 4px !important;
+      height: 3px !important;
+      background: var(--primary-color) !important;
+      border-radius: 2px 2px 0 0 !important;
+      transition: all 0.3s ease-out !important;
     }
 
     // Fade effect
@@ -54,8 +65,9 @@
   .headerActions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     margin-left: auto;
+    flex-shrink: 0;
 
     .userAvatar {
       transition: transform 0.2s, box-shadow 0.2s;
@@ -65,10 +77,118 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       }
     }
+
+    .mobileMenuButton {
+      color: var(--header-text-color) !important;
+      border: none !important;
+      background: transparent !important;
+      padding: 4px 8px !important;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: var(--primary-color) !important;
+      }
+
+      .anticon {
+        font-size: 18px;
+      }
+    }
   }
 }
 
-// Стили для Dropdown меню пользователя
+// Стили для мобильного Drawer
+.mobileDrawer {
+  :global(.ant-drawer-header) {
+    background: var(--header-background) !important;
+    color: var(--header-text-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  :global(.ant-drawer-title) {
+    color: var(--header-text-color) !important;
+    font-weight: 600;
+  }
+
+  :global(.ant-drawer-close) {
+    color: var(--header-text-color) !important;
+  }
+
+  :global(.ant-drawer-body) {
+    background: var(--content-background) !important;
+    padding: 0 !important;
+  }
+}
+
+// Стили для мобильного меню
+.mobileMenu {
+  border: none !important;
+  background: transparent !important;
+
+  :global(.ant-menu-item) {
+    margin: 0 !important;
+    padding: 16px 24px !important;
+    height: auto !important;
+    line-height: normal !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-size: 16px !important;
+    color: var(--content-text-color) !important;
+
+    .anticon {
+      font-size: 18px !important;
+      color: var(--content-text-color) !important;
+    }
+
+    &:hover {
+      background: var(--primary-color) !important;
+      color: white !important;
+
+      .anticon {
+        color: white !important;
+      }
+    }
+  }
+
+  :global(.ant-menu-item-selected) {
+    background: var(--primary-color) !important;
+    color: white !important;
+
+    .anticon {
+      color: white !important;
+    }
+
+    &::after {
+      display: none !important;
+    }
+  }
+
+  :global(.ant-menu-item-divider) {
+    background: var(--border-color) !important;
+    margin: 8px 24px !important;
+  }
+
+  // Стили для опасного пункта (выход)
+  :global(.ant-menu-item[data-menu-id*="logout"]) {
+    color: var(--error-color) !important;
+
+    .anticon {
+      color: var(--error-color) !important;
+    }
+
+    &:hover {
+      background: var(--error-color) !important;
+      color: white !important;
+
+      .anticon {
+        color: white !important;
+      }
+    }
+  }
+}
+
+// Стили для Dropdown меню пользователя (десктоп)
 :global(.ant-dropdown) {
   .ant-dropdown-menu {
     background: var(--dropdown-background, #ffffff) !important;
@@ -125,6 +245,17 @@
 
     .ant-dropdown-menu-item-divider {
       background: var(--dropdown-divider-color, #434343) !important;
+    }
+  }
+
+  .mobileDrawer {
+    :global(.ant-drawer-header) {
+      background: var(--header-background) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    :global(.ant-drawer-body) {
+      background: var(--content-background) !important;
     }
   }
 }

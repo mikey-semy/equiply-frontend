@@ -18,6 +18,10 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
             {
+                path: '/',
+                //element: <Landing />,
+            },
+            {
                 path: '/signup',
                 element: <Registration />,
             },
@@ -30,8 +34,23 @@ const router = createBrowserRouter([
                 element: <ForgotPassword />,
             },
             {
-                path: '/',
-                element: <Dashboard />,
+                path: '/dashboard',
+                element: <Dashboard />, // Главная с workspaces
+                errorElement: <Error />,
+            },
+            {
+                path: '/dashboard/recent',
+                //element: <RecentWorkspaces />, // Недавние workspace'ы
+                errorElement: <Error />,
+            },
+            {
+                path: '/dashboard/starred',
+                //element: <StarredWorkspaces />, // Избранные workspace'ы
+                errorElement: <Error />,
+            },
+            {
+                path: '/dashboard/explorer',
+                //element: <WorkspaceExplorer />, // Обзор доступных workspace'ов
                 errorElement: <Error />,
             },
         ],

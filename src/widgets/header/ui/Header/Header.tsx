@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Dropdown, Avatar, message } from 'antd';
-import { UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Layout, Menu, Dropdown, Avatar, message, Button, Drawer } from 'antd';
+import {
+    UserOutlined,
+    LogoutOutlined,
+    SettingOutlined,
+    HomeOutlined,
+    ClockCircleOutlined,
+    StarOutlined,
+    CompassOutlined,
+    LoginOutlined,
+    UserAddOutlined,
+    MenuOutlined
+} from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import { ThemeSwitcher } from '@/features/theme-switcher/ui/ThemeSwitcher/ThemeSwitcher';
@@ -17,12 +28,27 @@ interface HeaderProps {
     onAuthChange: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange }) => {
+export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAuthChange }) => {
     const { isDark, toggleTheme } = useTheme();
     const [isFading, setIsFading] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Отслеживаем размер экрана
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+            if (window.innerWidth > 768) {
+                setMobileMenuOpen(false); // Закрываем мобильное меню на десктопе
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleThemeSwitch = () => {
         setIsFading(true);
@@ -36,6 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange })
         if (isLoggingOut) return;
 
         setIsLoggingOut(true);
+        setMobileMenuOpen(false);
 
         try {
             const response = await logout();
@@ -64,9 +91,21 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange })
     };
 
     const handleMenuClick = (key: string) => {
+
+        setMobileMenuOpen(false);
+
         switch (key) {
             case 'home':
-                navigate('/');
+                navigate('/dashboard');
+                break;
+            case 'recent':
+                navigate('/dashboard/recent');
+                break;
+            case 'starred':
+                navigate('/dashboard/starred');
+                break;
+            case 'explorer':
+                navigate('/dashboard/explorer');
                 break;
             case 'signin':
                 navigate('/signin');
@@ -74,26 +113,20 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange })
             case 'signup':
                 navigate('/signup');
                 break;
-            case 'catalog':
-                // TODO: Добавить страницу каталога
-                break;
-            case 'about':
-                // TODO: Добавить страницу о нас
-                break;
         }
     };
 
     // Определяем активный пункт меню на основе текущего пути
     const getSelectedKey = () => {
-        if (location.pathname === '/signin') {
-            return ['signin'];
-        }
-        if (location.pathname === '/signup') {
-            return ['signup'];
-        }
-        if (location.pathname === '/') {
-            return ['home'];
-        }
+        const path = location.pathname;
+
+        if (path === '/signin') return ['signin'];
+        if (path === '/signup') return ['signup'];
+        if (path === '/dashboard/recent') return ['recent'];
+        if (path === '/dashboard/starred') return ['starred'];
+        if (path === '/dashboard/explorer') return ['explorer'];
+        if (path === '/dashboard' || path === '/') return ['home'];
+
         return ['home'];
     };
 
@@ -123,51 +156,101 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange })
         },
     ];
 
-    const items = isAuthenticated
+    // Основные пункты меню
+    const mainMenuItems = authProp
         ? [
             {
                 key: 'home',
                 label: 'Главная',
+                icon: <HomeOutlined />,
                 onClick: () => handleMenuClick('home')
             },
             {
-                key: 'catalog',
-                label: 'Каталог',
-                onClick: () => handleMenuClick('catalog')
+                key: 'recent',
+                label: 'Недавние',
+                icon: <ClockCircleOutlined />,
+                onClick: () => handleMenuClick('recent')
             },
             {
-                key: 'about',
-                label: 'О нас',
-                onClick: () => handleMenuClick('about')
+                key: 'starred',
+                label: 'Избранное',
+                icon: <StarOutlined />,
+                onClick: () => handleMenuClick('starred')
+            },
+            {
+                key: 'explorer',
+                label: 'Обзор',
+                icon: <CompassOutlined />,
+                onClick: () => handleMenuClick('explorer')
             },
         ]
         : [
             {
                 key: 'signin',
                 label: 'Вход',
+                icon: <LoginOutlined />,
                 onClick: () => handleMenuClick('signin')
             },
             {
                 key: 'signup',
                 label: 'Регистрация',
+                icon: <UserAddOutlined />,
                 onClick: () => handleMenuClick('signup')
             },
         ];
 
+    // Полное меню для мобильных (включая пользовательские пункты)
+    const mobileMenuItems = authProp
+        ? [
+            ...mainMenuItems,
+            { type: 'divider' as const },
+            {
+                key: 'profile',
+                label: 'Профиль',
+                icon: <UserOutlined />,
+                onClick: () => handleMenuClick('profile')
+            },
+            {
+                key: 'settings',
+                label: 'Настройки',
+                icon: <SettingOutlined />,
+                onClick: () => handleMenuClick('settings')
+            },
+            { type: 'divider' as const },
+            {
+                key: 'logout',
+                label: isLoggingOut ? 'Выходим...' : 'Выйти',
+                icon: <LogoutOutlined />,
+                onClick: handleLogout,
+                disabled: isLoggingOut,
+                danger: true,
+            },
+        ]
+        : mainMenuItems;
+
     return (
         <AntHeader className={styles.header}>
             <Logo />
-            <Menu
-                theme={isDark ? 'dark' : 'light'}
-                mode="horizontal"
-                selectedKeys={getSelectedKey()}
-                items={items}
-                className={`${styles.menu} menu-fade${isFading ? ' menu-fade-out' : ''}`}
-            />
+            {/* Десктопное меню */}
+            {!isMobile && (
+                <Menu
+                    theme={isDark ? 'dark' : 'light'}
+                    mode="horizontal"
+                    selectedKeys={getSelectedKey()}
+                    items={mainMenuItems}
+                    className={`${styles.menu} menu-fade${isFading ? ' menu-fade-out' : ''}`}
+                    style={{
+                        border: 'none',
+                        background: 'transparent'
+                    }}
+                />
+            )}
+
             <div className={styles.headerActions}>
                 <ThemeSwitcher isDark={isDark} onChange={handleThemeSwitch} />
 
-                {isAuthenticated && (
+                {/* Десктопный аватар */}
+                {!isMobile && authProp && (
                     <Dropdown
                         menu={{ items: userMenuItems }}
                         placement="bottomRight"
@@ -180,7 +263,39 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated, onAuthChange })
                         />
                     </Dropdown>
                 )}
+
+                {/* Мобильная кнопка меню */}
+                {isMobile && (
+                    <Button
+                        type="text"
+                        icon={<MenuOutlined />}
+                        onClick={() => setMobileMenuOpen(true)}
+                        className={styles.mobileMenuButton}
+                    />
+                )}
             </div>
+
+            {/* Мобильное выпадающее меню */}
+            <Drawer
+                title="Меню"
+                placement="right"
+                open={mobileMenuOpen}
+                onClose={() => setMobileMenuOpen(false)}
+                className={styles.mobileDrawer}
+                width={280}
+            >
+                <Menu
+                    theme={isDark ? 'dark' : 'light'}
+                    mode="vertical"
+                    selectedKeys={getSelectedKey()}
+                    items={mobileMenuItems}
+                    className={styles.mobileMenu}
+                    style={{
+                        border: 'none',
+                        background: 'transparent'
+                    }}
+                />
+            </Drawer>
         </AntHeader>
     );
 };

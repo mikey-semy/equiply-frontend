@@ -51,11 +51,6 @@
     border-radius: 6px !important;
     padding: 0 11px !important; // Унифицированный padding
 
-    &::placeholder {
-      color: var(--input-placeholder-color) !important;
-      opacity: 1 !important; // Убираем opacity, цвет уже правильный
-    }
-
     &:focus {
       background-color: var(--input-background) !important;
       color: var(--input-color) !important;
@@ -123,29 +118,27 @@
       font-size: inherit !important;
       font-family: inherit !important;
       line-height: normal !important;
-
-      &::placeholder {
-        color: var(--input-placeholder-color) !important;
-        opacity: 1 !important;
-      }
+      height: 100% !important;
 
       // Отключаем стили автозаполнения браузера
       &:-webkit-autofill,
       &:-webkit-autofill:hover,
       &:-webkit-autofill:focus,
       &:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 30px var(--input-background) inset !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--input-background) inset !important;
         -webkit-text-fill-color: var(--input-color) !important;
         background-color: var(--input-background) !important;
         background-clip: content-box !important;
       }
 
-      // Дополнительно для Firefox и других браузеров
-      &:-moz-autofill,
-      &:-moz-autofill:hover,
-      &:-moz-autofill:focus {
+      // Отключаем внутренний стиль автозаполнения браузера
+      &:-internal-autofill-selected {
+        appearance: none !important;
+        background-image: none !important;
         background-color: var(--input-background) !important;
         color: var(--input-color) !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--input-background) inset !important;
+        -webkit-text-fill-color: var(--input-color) !important;
       }
 
       &:focus,
@@ -194,29 +187,6 @@
     padding: 0 11px !important; // Такой же padding как у обычного input
     margin: 0 !important;
     line-height: 38px !important; // Выравниваем по центру
-
-    &::placeholder {
-      color: var(--input-placeholder-color) !important;
-      opacity: 1 !important; // Убираем opacity
-      line-height: 38px !important; // Выравниваем плейсхолдер
-    }
-
-    // Отключаем стили автозаполнения для пароля
-    &:-webkit-autofill,
-    &:-webkit-autofill:hover,
-    &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
-      -webkit-box-shadow: 0 0 0 30px var(--input-background) inset !important;
-      -webkit-text-fill-color: var(--input-color) !important;
-      background-color: transparent !important;
-    }
-
-    &:-moz-autofill,
-    &:-moz-autofill:hover,
-    &:-moz-autofill:focus {
-      background-color: transparent !important;
-      color: var(--input-color) !important;
-    }
 
     &:focus {
       border: none !important;

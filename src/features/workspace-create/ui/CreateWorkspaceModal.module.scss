@@ -1,0 +1,56 @@
+.modal {
+  :global(.ant-modal-header) {
+    background: var(--content-background);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  :global(.ant-modal-title) {
+    color: var(--content-header-color);
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  :global(.ant-modal-body) {
+    background: var(--content-background);
+    padding: 24px;
+  }
+
+  :global(.ant-modal-footer) {
+    background: var(--content-background);
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.form {
+  :global(.ant-form-item-label > label) {
+    color: var(--content-text-color);
+    font-weight: 500;
+  }
+
+  :global(.ant-input),
+  :global(.ant-input:focus),
+  :global(.ant-input-focused) {
+    background-color: var(--input-background);
+    border-color: var(--border-color);
+    color: var(--input-color);
+
+    &:hover {
+      border-color: var(--primary-color);
+    }
+
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+    }
+  }
+
+  :global(.ant-input::placeholder) {
+    color: var(--input-placeholder-color);
+  }
+
+  :global(.ant-switch) {
+    &.ant-switch-checked {
+      background-color: var(--primary-color);
+    }
+  }
+}

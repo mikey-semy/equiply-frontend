@@ -10,20 +10,90 @@
 @use "./variables.scss" as *;
 @use "./forms.scss" as *;
 @use "./themes/light.scss" as *;
-@use "./themes/dark.scss" as *; 
+@use "./themes/dark.scss" as *;
 
-body {
+/* Переопределение placeholder'ов для всех input полей */
+.ant-input::placeholder,
+.ant-input-affix-wrapper .ant-input::placeholder,
+.ant-input-password .ant-input::placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
 }
 
-a {
+.ant-input::-webkit-input-placeholder,
+.ant-input-affix-wrapper .ant-input::-webkit-input-placeholder,
+.ant-input-password .ant-input::-webkit-input-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
 }
 
-header {
+.ant-input::-moz-placeholder,
+.ant-input-affix-wrapper .ant-input::-moz-placeholder,
+.ant-input-password .ant-input::-moz-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
 }
 
-footer {
+.ant-input:-ms-input-placeholder,
+.ant-input-affix-wrapper .ant-input:-ms-input-placeholder,
+.ant-input-password .ant-input:-ms-input-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
 }
 
-:where(.ant-menu) {
-  transition: background-color 0.3s, color 0.3s;
+.ant-input:-moz-placeholder,
+.ant-input-affix-wrapper .ant-input:-moz-placeholder,
+.ant-input-password .ant-input:-moz-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+/* Дополнительное переопределение для форм авторизации */
+.ant-form .ant-form-item .ant-input::placeholder,
+.ant-form .ant-form-item .ant-input-affix-wrapper .ant-input::placeholder,
+.ant-form .ant-form-item .ant-input-password .ant-input::placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+/* Для темной темы - дополнительное переопределение */
+[data-theme="dark"] .ant-input::placeholder,
+[data-theme="dark"] .ant-input-affix-wrapper .ant-input::placeholder,
+[data-theme="dark"] .ant-input-password .ant-input::placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .ant-input::-webkit-input-placeholder,
+[data-theme="dark"]
+  .ant-input-affix-wrapper
+  .ant-input::-webkit-input-placeholder,
+[data-theme="dark"] .ant-input-password .ant-input::-webkit-input-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .ant-input::-moz-placeholder,
+[data-theme="dark"] .ant-input-affix-wrapper .ant-input::-moz-placeholder,
+[data-theme="dark"] .ant-input-password .ant-input::-moz-placeholder {
+  color: var(--input-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+/* Принудительное отключение автозаполнения */
+input:-internal-autofill-selected {
+  appearance: none !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  color: inherit !important;
+  -webkit-box-shadow: none !important;
+}
+
+.ant-input:-internal-autofill-selected {
+  appearance: none !important;
+  background-image: none !important;
+  background-color: var(--input-background) !important;
+  color: var(--input-color) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--input-background) inset !important;
+  -webkit-text-fill-color: var(--input-color) !important;
 }

@@ -154,7 +154,7 @@ const RegistrationPage: React.FC = () => {
                 // Это нужно для обновления состояния в других компонентах
                 window.dispatchEvent(new Event('auth-change'));
 
-                navigate('/', {
+                navigate('/dashboard', {
                     state: {
                         message: response.message, // "Регистрация завершена. Подтвердите email для полного доступа."
                         showVerificationReminder: response.data.requires_verification,

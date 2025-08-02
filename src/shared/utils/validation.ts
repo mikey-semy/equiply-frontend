@@ -79,29 +79,43 @@ export const validatePassword = (password: string): string | null => {
  * Форматирует номер телефона в российском формате
  */
 export const formatPhoneNumber = (value: string): string => {
-    // Удаляем все нецифровые символы
-    const numbers = value.replace(/\D/g, '');
 
-    // Если начинается с 8, заменяем на 7
-    const normalizedNumbers = numbers.startsWith('8') ? '7' + numbers.slice(1) : numbers;
+    // Убираем все символы кроме цифр
+    const cleaned = value.replace(/\D/g, '');
 
-    // Форматируем в +7 (XXX) XXX-XX-XX
-    if (normalizedNumbers.length >= 1) {
-        let formatted = '+7';
-        if (normalizedNumbers.length > 1) {
-            formatted += ' (' + normalizedNumbers.slice(1, 4);
-            if (normalizedNumbers.length > 4) {
-                formatted += ') ' + normalizedNumbers.slice(4, 7);
-                if (normalizedNumbers.length > 7) {
-                    formatted += '-' + normalizedNumbers.slice(7, 9);
-                    if (normalizedNumbers.length > 9) {
-                        formatted += '-' + normalizedNumbers.slice(9, 11);
-                    }
-                }
-            }
-        }
-        return formatted;
+    // Если пусто, возвращаем пустую строку
+    if (cleaned.length === 0) {
+        return '';
     }
 
-    return '+7 ';
+    let digits = cleaned;
+
+    // Если начинается с 8, заменяем на 7
+    if (digits.startsWith('8')) {
+        digits = '7' + digits.slice(1);
+    }
+
+    // Если не начинается с 7, добавляем 7 только если есть цифры
+    if (!digits.startsWith('7') && digits.length > 0) {
+        digits = '7' + digits;
+    }
+
+    // Обрезаем до максимального количества цифр (11 цифр для российского номера)
+    if (digits.length > 11) {
+        digits = digits.slice(0, 11);
+    }
+
+    // Форматируем в зависимости от количества цифр
+    if (digits.length === 1) {
+        return '+7';
+    } else if (digits.length <= 4) {
+        return `+7 (${digits.slice(1)}`;
+    } else if (digits.length <= 7) {
+        return `+7 (${digits.slice(1, 4)}) ${digits.slice(4)}`;
+    } else if (digits.length <= 9) {
+        return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+    } else {
+        return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}`;
+    }
+
 };

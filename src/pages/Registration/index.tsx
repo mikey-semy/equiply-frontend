@@ -30,7 +30,7 @@ const RegistrationPage: React.FC = () => {
     // Состояние полей формы
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('+7 ');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -69,7 +69,40 @@ const RegistrationPage: React.FC = () => {
      * Обрабатывает изменение телефона с форматированием
      */
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const formatted = formatPhoneNumber(e.target.value);
+        const inputValue = e.target.value;
+
+        // Если пользователь полностью очищает поле (включая стирание "+7")
+        if (inputValue === '') {
+            setPhone('');
+            // Очищаем ошибку при очистке поля
+            if (errors.phone) {
+                setErrors(prev => ({ ...prev, phone: '' }));
+            }
+            return;
+        }
+
+        // Если пользователь ввел только "+" - показываем "+"
+        if (inputValue === '+') {
+            setPhone('+7');
+            // Очищаем ошибку
+            if (errors.phone) {
+                setErrors(prev => ({ ...prev, phone: '' }));
+            }
+            return;
+        }
+
+        // Если пользователь стирает символы и остается только "+7" без цифр
+        if (inputValue === '+7' || inputValue === '+7 ' || inputValue === '+7 (') {
+            setPhone('');
+            // Очищаем ошибку
+            if (errors.phone) {
+                setErrors(prev => ({ ...prev, phone: '' }));
+            }
+            return;
+        }
+
+        // Форматируем введенное значение
+        const formatted = formatPhoneNumber(inputValue);
         setPhone(formatted);
 
         // Очищаем ошибку при вводе
@@ -92,12 +125,19 @@ const RegistrationPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await register({
+
+            // Подготавливаем данные для отправки
+            const registrationData = {
                 username: username.trim(),
                 email: email.trim(),
-                phone: phone.trim() === '+7 ' ? undefined : phone.trim(),
                 password,
-            });
+                // Отправляем телефон только если он заполнен и не равен только '+7 '
+                ...(phone.trim() && phone.trim() !== '+7' && phone.trim() !== '+7 '
+                    ? { phone: phone.trim() }
+                    : {})
+            };
+
+            const response = await register(registrationData);
 
             if (response?.success && response.data) {
                 // Пользователь всегда попадает на главную страницу после регистрации

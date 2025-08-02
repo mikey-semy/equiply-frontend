@@ -35,13 +35,16 @@ const getInputType = (value: string): 'email' | 'phone' | 'username' => {
  * Получает иконку в зависимости от типа ввода
  */
 const getInputIcon = (inputType: 'email' | 'phone' | 'username') => {
+    const iconProps = {
+        className: styles.prefixIcon
+    };
     switch (inputType) {
         case 'email':
-            return <MailOutlined />;
+            return <MailOutlined {...iconProps} />;
         case 'phone':
-            return <PhoneOutlined />;
+            return <PhoneOutlined {...iconProps} />;
         default:
-            return <UserOutlined />;
+            return <UserOutlined {...iconProps} />;
     }
 };
 
@@ -237,31 +240,26 @@ const LoginPage: React.FC = () => {
                 <h1 className={styles.loginTitle}>Equiply Access</h1>
 
                 <div className={styles.inputsContainer}>
-                    <Tooltip
-                        title="Вы можете использовать email, имя пользователя или номер телефона в формате +7 (XXX) XXX-XX-XX"
-                        placement="topLeft"
-                    >
-                        <Input
-                            prefix={getInputIcon(inputType)}
-                            suffix={
-                                <Tooltip title="Email, имя пользователя или телефон +7 (XXX) XXX-XX-XX">
-                                    <InfoCircleOutlined
-                                        style={{
-                                            color: hasValidationError
-                                                ? '#ff4d4f'
-                                                : isValid
-                                                    ? '#52c41a'
-                                                    : 'rgba(0,0,0,.45)'
-                                        }}
-                                    />
-                                </Tooltip>
-                            }
-                            placeholder="Email, имя пользователя или телефон"
-                            value={username}
-                            onChange={handleUsernameChange}
-                            status={hasValidationError ? 'error' : undefined}
-                        />
-                    </Tooltip>
+                    <Input
+                        prefix={getInputIcon(inputType)}
+                        suffix={
+                            <Tooltip title="Email, имя пользователя или телефон +7 (XXX) XXX-XX-XX">
+                                <InfoCircleOutlined
+                                    className={
+                                        hasValidationError
+                                            ? styles.iconError
+                                            : isValid
+                                                ? styles.iconSuccess
+                                                : styles.iconDefault
+                                    }
+                                />
+                            </Tooltip>
+                        }
+                        placeholder="Email, имя пользователя или телефон"
+                        value={username}
+                        onChange={handleUsernameChange}
+                        status={hasValidationError ? 'error' : undefined}
+                    />
 
                     {validationError && username.length > 0 && (
                         <div className={styles.validationError}>

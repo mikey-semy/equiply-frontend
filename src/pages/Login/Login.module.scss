@@ -14,6 +14,26 @@
 
 .inputsContainer {
   @extend %form-inputs-container-base;
+
+  :global(.ant-input-status-success) {
+    border-color: #52c41a;
+
+    &:focus,
+    &:hover {
+      border-color: #52c41a;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+    }
+  }
+
+  :global(.ant-input-status-error) {
+    border-color: #ff4d4f;
+
+    &:focus,
+    &:hover {
+      border-color: #ff4d4f;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+    }
+  }
 }
 
 .messageContainer {
@@ -28,7 +48,8 @@
   @extend %form-button-base;
 }
 
-.forgotPasswordLink {
+.forgotPasswordLink,
+.signupLink {
   @extend %form-link-base;
 }
 
@@ -69,26 +90,22 @@
   line-height: 1.4;
 }
 
-.inputsContainer {
-  // ...existing code...
+.prefixIcon {
+  color: var(--input-icon-color) !important;
 
-  :global(.ant-input-status-success) {
-    border-color: #52c41a;
-
-    &:focus,
-    &:hover {
-      border-color: #52c41a;
-      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
-    }
+  &:hover {
+    color: var(--input-color) !important;
   }
+}
 
-  :global(.ant-input-status-error) {
-    border-color: #ff4d4f;
+.iconDefault {
+  color: var(--input-icon-color) !important;
+}
 
-    &:focus,
-    &:hover {
-      border-color: #ff4d4f;
-      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
-    }
-  }
+.iconSuccess {
+  color: var(--success-color) !important;
+}
+
+.iconError {
+  color: var(--error-color) !important;
 }

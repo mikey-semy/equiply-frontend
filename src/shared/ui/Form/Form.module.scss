@@ -39,7 +39,11 @@
   }
 
   // Стили для обычных Input
-  :global(.ant-input:not(.ant-input-password .ant-input)) {
+  :global(
+      .ant-input:not(.ant-input-password .ant-input):not(
+          .ant-input-affix-wrapper .ant-input
+        )
+    ) {
     height: 40px !important;
     background-color: var(--input-background) !important;
     color: var(--input-color) !important;
@@ -48,8 +52,8 @@
     padding: 0 11px !important; // Унифицированный padding
 
     &::placeholder {
-      color: var(--input-color) !important;
-      opacity: 0.6 !important;
+      color: var(--input-placeholder-color) !important;
+      opacity: 1 !important; // Убираем opacity, цвет уже правильный
     }
 
     &:focus {
@@ -84,6 +88,101 @@
     }
   }
 
+  // Стили для Input с prefix/suffix (affix-wrapper)
+  :global(.ant-input-affix-wrapper:not(.ant-input-password)) {
+    height: 40px !important;
+    background-color: var(--input-background) !important;
+    border: 1px solid rgba(217, 217, 217, 0.5) !important;
+    border-radius: 6px !important;
+    padding: 0 11px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+
+    &:focus-within {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+
+    .ant-input {
+      background: none !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: block !important;
+      width: 100% !important;
+      flex: 1 !important;
+      color: var(--input-color) !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      line-height: normal !important;
+
+      &::placeholder {
+        color: var(--input-placeholder-color) !important;
+        opacity: 1 !important;
+      }
+
+      // Отключаем стили автозаполнения браузера
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px var(--input-background) inset !important;
+        -webkit-text-fill-color: var(--input-color) !important;
+        background-color: var(--input-background) !important;
+        background-clip: content-box !important;
+      }
+
+      // Дополнительно для Firefox и других браузеров
+      &:-moz-autofill,
+      &:-moz-autofill:hover,
+      &:-moz-autofill:focus {
+        background-color: var(--input-background) !important;
+        color: var(--input-color) !important;
+      }
+
+      &:focus,
+      &:hover,
+      &:active {
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+        background: none !important;
+        background-color: transparent !important;
+      }
+    }
+
+    .ant-input-prefix,
+    .ant-input-suffix {
+      color: var(
+        --input-icon-color
+      ) !important; // Используем правильную переменную
+      opacity: 1 !important; // Убираем opacity, цвет уже правильный
+      display: flex !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+
+      &:hover {
+        color: var(--input-color) !important;
+      }
+    }
+
+    .ant-input-prefix {
+      margin-right: 8px !important;
+    }
+
+    .ant-input-suffix {
+      margin-left: 8px !important;
+    }
+  }
+
   // Стили для Input внутри Input.Password
   :global(.ant-input-password .ant-input) {
     background-color: transparent !important;
@@ -97,9 +196,26 @@
     line-height: 38px !important; // Выравниваем по центру
 
     &::placeholder {
-      color: var(--input-color) !important;
-      opacity: 0.6 !important;
+      color: var(--input-placeholder-color) !important;
+      opacity: 1 !important; // Убираем opacity
       line-height: 38px !important; // Выравниваем плейсхолдер
+    }
+
+    // Отключаем стили автозаполнения для пароля
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px var(--input-background) inset !important;
+      -webkit-text-fill-color: var(--input-color) !important;
+      background-color: transparent !important;
+    }
+
+    &:-moz-autofill,
+    &:-moz-autofill:hover,
+    &:-moz-autofill:focus {
+      background-color: transparent !important;
+      color: var(--input-color) !important;
     }
 
     &:focus {
@@ -117,18 +233,18 @@
 
   // Стили для иконки показать/скрыть пароль
   :global(.ant-input-password .ant-input-suffix) {
-    color: var(--input-color) !important;
+    color: var(--input-icon-color) !important;
     padding-right: 11px !important; // Выравниваем с общим padding
     display: flex !important;
     align-items: center !important;
     height: 100% !important;
 
     .ant-input-password-icon {
-      color: var(--input-color) !important;
-      opacity: 0.6;
+      color: var(--input-icon-color) !important;
+      opacity: 1 !important;
 
       &:hover {
-        opacity: 1;
+        color: var(--input-color) !important;
       }
     }
   }
@@ -251,10 +367,10 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     opacity: 0.8;
-    text-decoration: underline;
   }
 }
 

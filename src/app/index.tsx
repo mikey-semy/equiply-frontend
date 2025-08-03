@@ -80,9 +80,9 @@ const App: React.FC = () => {
             }
         } else {
             if (currentPath === '/signin' || currentPath === '/signup' || currentPath === '/') {
-                console.log('✅ User authenticated, redirecting to /dashboard');
-                lastNavigationRef.current = '/dashboard';
-                navigate('/dashboard', { replace: true });
+                console.log('✅ User authenticated, redirecting to main page');
+                lastNavigationRef.current = '/';
+                navigate('/', { replace: true });
             }
         }
     };

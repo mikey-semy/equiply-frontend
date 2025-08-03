@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
 
         switch (key) {
             case 'home':
-                navigate('/dashboard');
+                navigate('/');
                 break;
             case 'recent':
                 navigate('/dashboard/recent');
@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
         if (path === '/dashboard/recent') return ['recent'];
         if (path === '/dashboard/starred') return ['starred'];
         if (path === '/dashboard/explorer') return ['explorer'];
-        if (path === '/dashboard' || path === '/') return ['home'];
+        if (path === '/' || path === '/dashboard') return ['home'];
 
         return ['home'];
     };

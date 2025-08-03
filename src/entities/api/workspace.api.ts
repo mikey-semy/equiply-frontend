@@ -1,5 +1,6 @@
 import { handleApiError } from '@/shared/api/api.handlers';
 import { parseJsonResponse } from '@/shared/api/api.utils';
+import { getAccessToken } from '@/shared/api/auth.api';
 import type {
     CreateWorkspaceRequest,
     WorkspaceCreateResponse,
@@ -22,14 +23,33 @@ import type {
  */
 export const createWorkspace = async (data: CreateWorkspaceRequest): Promise<WorkspaceCreateResponse> => {
     try {
+        const accessToken = getAccessToken();
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+
+        // Добавляем Authorization заголовок если есть токен
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
         const response = await fetch('/api/v1/workspaces', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify(data),
             credentials: 'include',
         });
+
+        if (!response.ok) {
+            let errorDetails = '';
+            try {
+                const errorData = await response.json();
+                errorDetails = ` - ${JSON.stringify(errorData)}`;
+            } catch (e) {
+                console.log(`Failed to parse error response as JSON:`, e);
+            }
+            throw new Error(`Create workspace failed: ${response.status} ${response.statusText}${errorDetails}`);
+        }
 
         const result = await parseJsonResponse(response);
         return result;
@@ -72,11 +92,26 @@ export const getWorkspaces = async (params: WorkspaceListParams = {}): Promise<W
         console.log('Full API URL:', new URL(url, window.location.origin).href);
         console.log('Params:', params);
 
+        const accessToken = getAccessToken();
+        console.log('Access token for request:', accessToken ? `${accessToken.substring(0, 50)}...` : 'null');
+
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+
+        // Добавляем Authorization заголовок если есть токен
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+            console.log('Authorization header added:', `Bearer ${accessToken.substring(0, 20)}...`);
+        } else {
+            console.warn('⚠️ No access token found! Request will fail.');
+        }
+
+        console.log('Request headers:', headers);
+
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             credentials: 'include', // Включаем cookies для авторизации
         });
 
@@ -89,7 +124,6 @@ export const getWorkspaces = async (params: WorkspaceListParams = {}): Promise<W
                 const errorData = await response.json();
                 errorDetails = ` - ${JSON.stringify(errorData)}`;
             } catch (e) {
-                // Игнорируем ошибки парсинга JSON
                 console.log('Failed to parse error response as JSON:', e);
             }
             throw new Error(`Workspaces request failed: ${response.status} ${response.statusText}${errorDetails}`);

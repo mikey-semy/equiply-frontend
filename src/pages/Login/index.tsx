@@ -152,7 +152,7 @@ const LoginPage: React.FC = () => {
 
                 // Уведомляем приложение об изменении аутентификации
                 window.dispatchEvent(new Event('auth-change'));
-                navigate('/dashboard');
+                navigate('/');
             } else {
                 setError('Неверные учетные данные.');
             }

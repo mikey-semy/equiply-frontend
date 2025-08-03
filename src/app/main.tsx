@@ -18,8 +18,8 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
             {
-                path: '/',
-                //element: <Landing />,
+                index: true,
+                element: <Dashboard />,
             },
             {
                 path: '/signup',
@@ -32,11 +32,6 @@ const router = createBrowserRouter([
             {
                 path: '/forgot-password',
                 element: <ForgotPassword />,
-            },
-            {
-                path: '/dashboard',
-                element: <Dashboard />, // Главная с workspaces
-                errorElement: <Error />,
             },
             {
                 path: '/dashboard/recent',

@@ -8,7 +8,7 @@ import App from './index';
 import Registration from '@/pages/Registration';
 import Login from '@/pages/Login';
 import ForgotPassword from '@/pages/ForgotPassword';
-import Dashboard from '@/pages/Dashboard';
+import Workspaces from '@/pages/Workspaces';
 import Error from '@/pages/Error';
 
 const router = createBrowserRouter([
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Dashboard />,
+                element: <Workspaces />,
             },
             {
                 path: '/signup',

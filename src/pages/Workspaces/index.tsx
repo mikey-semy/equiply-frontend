@@ -23,8 +23,8 @@ import {
 } from '@ant-design/icons';
 import { useWorkspaces } from '@/shared/hooks/useWorkspaces';
 import { CreateWorkspaceModal } from '@/features/workspace-create';
-import type { Workspace, WorkspaceSortField, CreateWorkspaceRequest } from '@/entities/workspace';
-import styles from './Dashboard.module.scss';
+import type { Workspace, WorkspaceSortField, CreateWorkspaceRequest } from './Workspaces.types';
+import styles from './Workspaces.module.scss';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -32,7 +32,7 @@ const { Search } = Input;
 
 type ViewMode = 'grid' | 'list';
 
-const Dashboard: React.FC = () => {
+const Workspaces: React.FC = () => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -41,10 +41,10 @@ const Dashboard: React.FC = () => {
 
     // Проверяем, что компонент смонтирован
     useEffect(() => {
-        console.log('Dashboard: Component mounted');
+        console.log('Workspaces: Component mounted');
 
         return () => {
-            console.log('Dashboard: Component unmounted');
+            console.log('Workspaces: Component unmounted');
         };
     }, []);
 
@@ -58,6 +58,13 @@ const Dashboard: React.FC = () => {
         updateParams,
         refresh,
     } = useWorkspaces();
+
+    // Автоматическая загрузка данных при монтировании компонента
+    useEffect(() => {
+        console.log('Workspaces: Component mounted - loading initial data');
+        refresh(); // Загружаем данные при первом рендере
+    }, []); // Пустой массив зависимостей - выполняется только при монтировании
+
 
     // Обработчики
     const handleCreateModalOpen = () => setCreateModalOpen(true);
@@ -359,4 +366,4 @@ const Dashboard: React.FC = () => {
     );
 };
 
-export default Dashboard;
+export default Workspaces;

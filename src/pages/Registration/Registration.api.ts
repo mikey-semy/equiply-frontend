@@ -1,25 +1,25 @@
+import api from '@/shared/api/api';
+import { isMobileDevice } from '@/shared/api/api.utils';
 import { RegistrationRequest, RegistrationResponse } from './Registration.types';
-import { parseJsonResponse, isMobileDevice } from '@/shared/api/api.utils';
 
 /**
  * Выполняет запрос на регистрацию пользователя.
  *
- * @param data - Объект с данными для регистрации
- * @returns Promise<RegistrationResponse> - Ответ от API
+ * @param data - Объект с данными для регистрации (email, password, name и др.).
+ * @returns Promise<RegistrationResponse> - Ответ с информацией о созданном пользователе.
+ *
+ * @example
+ * const response = await register({
+ *   email: 'user@example.com',
+ *   password: 'password123',
+ *   name: 'John Doe'
+ * });
+ * console.log(response.user);
  */
 export const register = async (data: RegistrationRequest): Promise<RegistrationResponse> => {
-
     const useCookies = isMobileDevice() ? 'false' : 'true';
-    const url = `/api/v1/register?use_cookies=${useCookies}`;
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include',
-    });
+    const response = await api.post(`/api/v1/register?use_cookies=${useCookies}`, data);
 
-    return parseJsonResponse(response);
+    return response.data;
 };

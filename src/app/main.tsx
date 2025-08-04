@@ -9,7 +9,9 @@ import Registration from '@/pages/Registration';
 import Login from '@/pages/Login';
 import ForgotPassword from '@/pages/ForgotPassword';
 import Workspaces from '@/pages/Workspaces';
+import Chat from '@/pages/Chat';
 import Error from '@/pages/Error';
+
 
 const router = createBrowserRouter([
     {
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
                 //element: <WorkspaceExplorer />, // Обзор доступных workspace'ов
                 errorElement: <Error />,
             },
+            {
+                path: '/ai',
+                element: <Chat />, // Компонент чата
+            }
         ],
     },
 ]);

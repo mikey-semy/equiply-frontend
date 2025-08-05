@@ -915,7 +915,7 @@ const ChatPage: React.FC = () => {
                                         ? styles.typingBubble
                                         : styles.assistantBubble
                                     }`}>
-                                    <ReactMarkdown></ReactMarkdown>
+                                    <ReactMarkdown>{message.text}</ReactMarkdown>
                                     <div className={styles.messageTime}>
                                         {formatMessageTime(message.timestamp)}
                                     </div>

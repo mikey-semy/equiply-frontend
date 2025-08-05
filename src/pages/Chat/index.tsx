@@ -11,12 +11,11 @@ import {
     SearchOutlined,
     LoadingOutlined,
     ClearOutlined,
-    DownloadOutlined,
     FileMarkdownOutlined,
     FileTextOutlined,
     MoreOutlined
 } from '@ant-design/icons';
-import { Modal, Input, message, Dropdown, Space } from 'antd';
+import { Modal, Input, message, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { formatDate } from '@/shared/lib/date.utils';
 import styles from './Chat.module.scss';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, Switch, Button } from 'antd';
-import type { CreateWorkspaceRequest } from '@/entities/workspace';
+import type { CreateWorkspaceRequest } from '@/pages/Workspaces/Workspaces.types';
 import styles from './CreateWorkspaceModal.module.scss';
 
 interface CreateWorkspaceModalProps {

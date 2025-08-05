@@ -129,6 +129,7 @@ export type AIChatStatsSchema = {
  * Базовая схема ответа
  */
 export type BaseResponseSchema<T = Record<string, unknown>> = {
+    success: boolean;
     message: string;
     data: T;
 };

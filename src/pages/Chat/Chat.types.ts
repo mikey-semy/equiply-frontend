@@ -198,3 +198,49 @@ export type UIMessage = {
     timestamp: Date;
     isTyping?: boolean;
 };
+
+/**
+ * Типы доступных моделей AI
+ */
+export enum ModelType {
+    YANDEX_GPT_LITE = "yandexgpt-lite",
+    YANDEX_GPT_PRO = "yandexgpt",
+    YANDEX_GPT_PRO_32K = "yandexgpt-32k",
+    LLAMA_8B = "llama-lite",
+    LLAMA_70B = "llama",
+    CUSTOM = "custom"
+}
+
+/**
+ * Схема настроек AI пользователя
+ */
+export type AISettingsSchema = {
+    id?: number;
+    created_at?: string;
+    updated_at?: string;
+    user_id: string;
+    preferred_model: ModelType;
+    temperature: number;
+    max_tokens: number;
+    system_message?: string;
+};
+
+/**
+ * Схема для обновления настроек AI
+ */
+export type AISettingsUpdateSchema = {
+    preferred_model?: ModelType;
+    temperature?: number;
+    max_tokens?: number;
+    system_message?: string;
+};
+
+/**
+ * Схема ответа с настройками AI
+ */
+export type AISettingsResponseSchema = BaseResponseSchema<AISettingsSchema>;
+
+/**
+ * Схема ответа при обновлении настроек AI
+ */
+export type AISettingsUpdateResponseSchema = BaseResponseSchema<AISettingsSchema>;

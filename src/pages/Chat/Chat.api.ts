@@ -10,7 +10,10 @@ import {
     AIChatDeleteResponseSchema,
     AIChatStatsResponseSchema,
     AIChatHistoryResponseSchema,
-    AIChatHistoryClearResponseSchema
+    AIChatHistoryClearResponseSchema,
+    AISettingsResponseSchema,
+    AISettingsUpdateSchema,
+    AISettingsUpdateResponseSchema,
 } from './Chat.types';
 
 /**
@@ -234,6 +237,32 @@ export const exportChatHistoryText = async (chatId: string): Promise<void> => {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+    } catch (error) {
+        handleApiError(error);
+        throw error;
+    }
+};
+
+/**
+ * Получает настройки AI пользователя
+ */
+export const getAISettings = async (): Promise<AISettingsResponseSchema> => {
+    try {
+        const response = await api.get('/api/v1/ai/settings');
+        return handleApiResponse(response);
+    } catch (error) {
+        handleApiError(error);
+        throw error;
+    }
+};
+
+/**
+ * Обновляет настройки AI пользователя
+ */
+export const updateAISettings = async (settings: AISettingsUpdateSchema): Promise<AISettingsUpdateResponseSchema> => {
+    try {
+        const response = await api.put('/api/v1/ai/settings', settings);
+        return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
         throw error;

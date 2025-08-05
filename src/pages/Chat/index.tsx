@@ -13,14 +13,15 @@ import {
     ClearOutlined,
     FileMarkdownOutlined,
     FileTextOutlined,
-    MoreOutlined
+    MoreOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
 import { Modal, Input, message, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { formatDate } from '@/shared/lib/date.utils';
 import styles from './Chat.module.scss';
-import { AIChatSchema, UIMessage, MessageRole } from './Chat.types';
+import { AIChatSchema, UIMessage, MessageRole, AISettingsSchema } from './Chat.types';
 import {
     getUserChats,
     createChat,
@@ -34,7 +35,7 @@ import {
     exportChatHistoryMarkdown,
     exportChatHistoryText
 } from './Chat.api';
-
+import AISettingsModal from '@/widgets/settings/ui/AISettingsModal';
 
 /**
  * Компонент страницы чата с ИИ
@@ -53,7 +54,32 @@ const ChatPage: React.FC = () => {
     const [creatingChat, setCreatingChat] = useState(false);
     const [selectedChats, setSelectedChats] = useState<string[]>([]);
     const [bulkMode, setBulkMode] = useState(false);
+    const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+    const [currentSettings, setCurrentSettings] = useState<AISettingsSchema | null>(null);
 
+    /**
+     * Показывает модальное окно настроек AI
+     */
+    const handleShowSettings = () => {
+        setSettingsModalOpen(true);
+    };
+
+    /**
+     * Показывает текущую модель в заголовке
+     */
+    const getCurrentModelName = (): string => {
+        if (!currentSettings) return '';
+
+        return currentSettings.preferred_model;
+    };
+
+    /**
+     * Обработчик сохранения настроек
+     */
+    const handleSettingsSaved = (settings: AISettingsSchema) => {
+        setCurrentSettings(settings);
+        message.success('Настройки AI успешно обновлены');
+    };
 
     /**
      * Загружает список чатов при монтировании компонента
@@ -821,6 +847,13 @@ const ChatPage: React.FC = () => {
                     >
                         <BarChartOutlined /> Статистика
                     </button>
+                    <button
+                        className={styles.settingsButton}
+                        onClick={handleShowSettings}
+                        title="Настройки AI"
+                    >
+                        <SettingOutlined /> Настройки
+                    </button>
                 </div>
             </div>
 
@@ -835,12 +868,26 @@ const ChatPage: React.FC = () => {
                     <h1 className={styles.chatHeaderTitle}>
                         {getActiveChatTitle()}
                     </h1>
+                    {currentSettings && (
+                        <span className={styles.currentModel}>
+                            {getCurrentModelName()}
+                        </span>
+                    )}
                     {/* Кнопки управления историей активного чата */}
                     {activeChat && (
                         <div className={styles.chatHeaderActions}>
                             <Dropdown
                                 menu={{
                                     items: [
+                                        {
+                                            key: 'settings',
+                                            icon: <SettingOutlined />,
+                                            label: 'Настройки AI',
+                                            onClick: () => handleShowSettings()
+                                        },
+                                        {
+                                            type: 'divider'
+                                        },
                                         {
                                             key: 'export-md',
                                             icon: <FileMarkdownOutlined />,
@@ -983,6 +1030,13 @@ const ChatPage: React.FC = () => {
                     </div>
                 )}
             </Modal>
+
+            {/* Модальное окно настроек AI */}
+            <AISettingsModal
+                open={settingsModalOpen}
+                onCancel={() => setSettingsModalOpen(false)}
+                onSave={handleSettingsSaved}
+            />
         </div>
     );
 };

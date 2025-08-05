@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 import '@ant-design/v5-patch-for-react-19';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { Header } from '@/widgets/header/ui/Header/Header';
+import { FloatingAIButton } from '@/widgets/floating-ai-button/ui/FloatingAIButton/FloatingAIButton';
 import { isAuthenticated } from '@/shared/api/auth.api';
 import './styles/index.scss'
 import styles from './App.module.scss';
@@ -11,6 +12,7 @@ import styles from './App.module.scss';
 const { Content, Footer } = Layout;
 
 const AUTH_PAGES = ['/signin', '/signup', '/forgot-password'];
+const AI_PAGE = '/ai';
 
 const App: React.FC = () => {
     const navigate = useNavigate();
@@ -29,6 +31,10 @@ const App: React.FC = () => {
     const lastNavigationRef = useRef<string>('');
 
     const isAuthPage = AUTH_PAGES.includes(location.pathname);
+    const isAIPage = location.pathname === AI_PAGE;
+
+    // Показываем плавающую кнопку AI только для авторизованных пользователей на страницах кроме AI и авторизации
+    const showFloatingAI = authenticated && !isAuthPage && !isAIPage;
 
     // Функция проверки авторизации с детальным логированием
     const checkAuth = (): boolean => {
@@ -128,15 +134,6 @@ const App: React.FC = () => {
         }, 100);
     }, []);
 
-    // Отслеживание изменений маршрута - УБИРАЕМ ЭТОТ ЭФФЕКТ!
-    // Он вызывает зацикливание при навигации
-    // useEffect(() => {
-    //     if (!loading) {
-    //         console.log('📍 Route changed to:', location.pathname);
-    //         updateAuth();
-    //     }
-    // }, [location.pathname]);
-
     // События
     useEffect(() => {
         if (loading) return;
@@ -181,11 +178,13 @@ const App: React.FC = () => {
         console.log('📊 Authenticated:', authenticated);
         console.log('📊 Path:', location.pathname);
         console.log('📊 Is auth page:', isAuthPage);
+        console.log('📊 Is AI page:', isAIPage);
+        console.log('📊 Show floating AI:', showFloatingAI);
         console.log('📊 Loading:', loading);
         console.log('📊 Auth checks performed:', authCheckCount.current);
         console.log('📊 Last navigation:', lastNavigationRef.current);
         console.log('📊 ===================');
-    }, [authenticated, location.pathname, loading]);
+    }, [authenticated, location.pathname, loading, showFloatingAI]);
 
     if (loading) {
         return (
@@ -224,6 +223,9 @@ const App: React.FC = () => {
                 <Footer className={styles.appFooter}>
                     Equiply ©{new Date().getFullYear()}
                 </Footer>
+
+                {/* Плавающая кнопка AI */}
+                <FloatingAIButton visible={showFloatingAI} />
             </Layout>
         </ThemeProvider>
     );

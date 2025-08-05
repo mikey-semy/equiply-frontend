@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { RobotOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import styles from './FloatingAIButton.module.scss';
+import styles from './FloatingAiButton.module.scss';
 
 interface FloatingAIButtonProps {
     visible?: boolean;

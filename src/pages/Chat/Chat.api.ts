@@ -32,7 +32,7 @@ export const getAICompletion = async (chatId: string, message: string): Promise<
         const formData = new FormData();
         formData.append('message', message);
 
-        const response = await api.post(`/api/v1/ai/completion?chat_id=${chatId}`, formData, {
+        const response = await api.post(`/api/v1/ai/completion?chat_id=${encodeURIComponent(chatId)}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -75,7 +75,7 @@ export const createChat = async (data: AIChatCreateSchema = {}): Promise<AIChatC
  */
 export const getChat = async (chatId: string): Promise<AIChatResponseSchema> => {
     try {
-        const response = await api.get(`/api/v1/ai/chats/${chatId}`);
+        const response = await api.get(`/api/v1/ai/chats/${encodeURIComponent(chatId)}`);
         return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
@@ -88,7 +88,7 @@ export const getChat = async (chatId: string): Promise<AIChatResponseSchema> => 
  */
 export const updateChat = async (chatId: string, data: AIChatUpdateSchema): Promise<AIChatResponseSchema> => {
     try {
-        const response = await api.put(`/api/v1/ai/chats/${chatId}`, data);
+        const response = await api.put(`/api/v1/ai/chats/${encodeURIComponent(chatId)}`, data);
         return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
@@ -101,7 +101,7 @@ export const updateChat = async (chatId: string, data: AIChatUpdateSchema): Prom
  */
 export const deleteChat = async (chatId: string): Promise<AIChatDeleteResponseSchema> => {
     try {
-        const response = await api.delete(`/api/v1/ai/chats/${chatId}`);
+        const response = await api.delete(`/api/v1/ai/chats/${encodeURIComponent(chatId)}`);
 
         // Обрабатываем различные форматы ответа от бэкенда
         if (response.data === true || response.data === false) {
@@ -132,7 +132,7 @@ export const deleteChat = async (chatId: string): Promise<AIChatDeleteResponseSc
  */
 export const duplicateChat = async (chatId: string): Promise<AIChatCreateResponseSchema> => {
     try {
-        const response = await api.post(`/api/v1/ai/chats/${chatId}/duplicate`);
+        const response = await api.post(`/api/v1/ai/chats/${encodeURIComponent(chatId)}/duplicate`);
         return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
@@ -171,7 +171,7 @@ export const getChatsStats = async (): Promise<AIChatStatsResponseSchema> => {
  */
 export const getChatHistory = async (chatId: string): Promise<AIChatHistoryResponseSchema> => {
     try {
-        const response = await api.get(`/api/v1/ai/history/${chatId}`);
+        const response = await api.get(`/api/v1/ai/history/${encodeURIComponent(chatId)}`);
         return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
@@ -185,7 +185,7 @@ export const getChatHistory = async (chatId: string): Promise<AIChatHistoryRespo
  */
 export const clearChatHistory = async (chatId: string): Promise<AIChatHistoryClearResponseSchema> => {
     try {
-        const response = await api.post(`/api/v1/ai/history/clear?chat_id=${chatId}`);
+        const response = await api.post(`/api/v1/ai/history/clear?chat_id=${encodeURIComponent(chatId)}`);
         return handleApiResponse(response);
     } catch (error) {
         handleApiError(error);
@@ -198,7 +198,7 @@ export const clearChatHistory = async (chatId: string): Promise<AIChatHistoryCle
  */
 export const exportChatHistoryMarkdown = async (chatId: string): Promise<void> => {
     try {
-        const response = await api.get(`/api/v1/ai/history/export/markdown?chat_id=${chatId}`, {
+        const response = await api.get(`/api/v1/ai/history/export/markdown?chat_id=${encodeURIComponent(chatId)}`, {
             responseType: 'blob'
         });
 
@@ -223,7 +223,7 @@ export const exportChatHistoryMarkdown = async (chatId: string): Promise<void> =
  */
 export const exportChatHistoryText = async (chatId: string): Promise<void> => {
     try {
-        const response = await api.get(`/api/v1/ai/history/export/text?chat_id=${chatId}`, {
+        const response = await api.get(`/api/v1/ai/history/export/text?chat_id=${encodeURIComponent(chatId)}`, {
             responseType: 'blob'
         });
 

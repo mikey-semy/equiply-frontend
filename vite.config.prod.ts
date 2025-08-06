@@ -9,14 +9,32 @@ export default defineConfig((env) => ({
                 target: 'https://api.equiply.ru',
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path.replace(/^\/api/, '')
             },
             '/media': {
                 target: 'https://api.equiply.ru',
                 changeOrigin: true,
                 secure: false,
-                rewrite: (path) => path.replace(/^\/media/, ''),
             },
+            '/auth': {
+                target: 'https://api.equiply.ru',
+                changeOrigin: true,
+                secure: false
+            },
+            '/redoc': {
+                target: 'https://api.equiply.ru',
+                changeOrigin: true,
+                secure: false
+            },
+            '/docs': {
+                target: 'https://api.equiply.ru',
+                changeOrigin: true,
+                secure: false
+            },
+            '/openapi.json': {
+                target: 'https://api.equiply.ru',
+                changeOrigin: true,
+                secure: false
+            }
         }
     }
 }));

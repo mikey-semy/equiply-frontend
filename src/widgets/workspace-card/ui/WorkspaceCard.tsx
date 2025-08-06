@@ -6,7 +6,7 @@ import {
     EyeOutlined,
     LockOutlined
 } from '@ant-design/icons';
-import type { Workspace } from '@/entities/workspace';
+import type { Workspace } from '@/pages/Workspaces/Workspaces.types';
 import { formatDate } from '@/shared/lib/date.utils';
 import styles from './WorkspaceCard.module.scss';
 

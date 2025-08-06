@@ -1,5 +1,5 @@
-import { parseJsonResponse, isMobileDevice } from './api.utils';
-import { apiPost, getAccessToken } from './api.client';
+import api from '@/shared/api/api';
+import { isMobileDevice } from './api.utils';
 import { isTokenExpired, getUserFromToken } from '@/shared/utils/jwt.utils';
 
 /**
@@ -11,50 +11,69 @@ export type LogoutResponse = {
 };
 
 /**
- * Получает refresh токен из localStorage или cookies
- */
-const getRefreshToken = (): string | null => {
-    console.log('=== getRefreshToken Debug ===');
-    console.log('isMobileDevice:', isMobileDevice());
-    console.log('document.cookie:', document.cookie);
-
-    // Для мобильных устройств - из localStorage
+ * Получает access токен из localStorage или cookies
+ * @returns string | null - Access токен или null если не найден
+ * @example
+ * const token = getAccessToken();
+ * if (token) {
+ *   console.log('Access token:', token);
+ * }
+*/
+export const getAccessToken = (): string | null => {
     if (isMobileDevice()) {
-        const token = localStorage.getItem('refresh_token');
-        console.log('Mobile refresh_token from localStorage:', token ? `${token.length} chars` : 'null');
-        console.log('=== End getRefreshToken Debug ===');
-        return token;
+        return localStorage.getItem('access_token');
     }
 
-    // Для десктопа - из cookies
+    // Для десктопа пытаемся получить из cookies
     const cookies = document.cookie.split(';');
-    console.log('All cookies:', cookies);
-
     for (const cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
-        console.log(`Cookie: ${name} = ${value ? `${value.length} chars` : 'empty'}`);
-        if (name === 'refresh_token') {
-            const decodedValue = decodeURIComponent(value);
-            console.log('Found refresh_token cookie:', decodedValue ? `${decodedValue.length} chars` : 'empty');
-            console.log('=== End getRefreshToken Debug ===');
-            return decodedValue;
+        if (name === 'access_token') {
+            return decodeURIComponent(value);
         }
     }
 
-    console.log('No refresh_token cookie found');
-    console.log('=== End getRefreshToken Debug ===');
     return null;
 };
 
 /**
- * Выполняет выход из системы
+ * Получает refresh токен из localStorage или cookies
+ * @returns string | null - Refresh токен или null если не найден
+ *
+ * @example
+ * const refreshToken = getRefreshToken();
+ * if (refreshToken) {
+ *  console.log('Refresh token:', refreshToken);
+ */
+const getRefreshToken = (): string | null => {
+    if (isMobileDevice()) {
+        return localStorage.getItem('refresh_token');
+    }
+
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'refresh_token') {
+            return decodeURIComponent(value);
+        }
+    }
+
+    return null;
+};
+
+/**
+ * Выполняет выход из системы.
+ *
+ * @returns Promise<LogoutResponse> - Ответ с результатом операции выхода.
+ *
+ * @example
+ * const response = await logout();
+ * console.log(response.success);
  */
 export const logout = async (): Promise<LogoutResponse> => {
-    const clearCookies = !isMobileDevice(); // Очищаем cookies для десктопа
-    const url = `/api/v1/auth/logout?clear_cookies=${clearCookies}`;
+    const clearCookies = !isMobileDevice();
 
-    const response = await apiPost(url);
-    const result = await parseJsonResponse(response);
+    const response = await api.post(`/api/v1/auth/logout?clear_cookies=${clearCookies}`);
 
     // Очищаем localStorage для мобильных
     if (isMobileDevice()) {
@@ -62,11 +81,16 @@ export const logout = async (): Promise<LogoutResponse> => {
         localStorage.removeItem('refresh_token');
     }
 
-    return result;
+    return response.data;
 };
 
 /**
- * Обновляет access токен используя refresh токен
+ * Обновляет access токен используя refresh токен.
+ *
+ * @returns Promise<void> - Успешное обновление или ошибка.
+ *
+ * @example
+ * await refreshAccessToken();
  */
 export const refreshAccessToken = async (): Promise<void> => {
     const refreshToken = getRefreshToken();
@@ -76,91 +100,25 @@ export const refreshAccessToken = async (): Promise<void> => {
     }
 
     try {
-        console.log('Refreshing access token...');
-        console.log('Using refresh token:', refreshToken.substring(0, 50) + '...');
-
         const useCookies = isMobileDevice() ? 'false' : 'true';
-        const url = `/api/v1/auth/refresh?use_cookies=${useCookies}`;
-
-        console.log('=== Refresh API Debug ===');
-        console.log('Current URL:', window.location.href);
-        console.log('API URL:', url);
-        console.log('Full API URL:', new URL(url, window.location.origin).href);
-        console.log('useCookies:', useCookies);
-
-        // Для мобильных используем заголовок, для десктопа полагаемся на cookies
-        const headers: Record<string, string> = {
-            'Content-Type': 'application/json',
-        };
+        const headers: Record<string, string> = {};
 
         // Для мобильных передаем refresh токен в заголовке
         if (isMobileDevice()) {
             headers['refresh-token'] = refreshToken;
         }
 
-        // Создаем кастомный запрос
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            credentials: 'include', // Включаем cookies
-        });
+        const response = await api.post(`/api/v1/auth/refresh?use_cookies=${useCookies}`, {}, { headers });
 
-        console.log('Refresh response status:', response.status);
-        console.log('Refresh response URL:', response.url);
-
-        // Детально проверяем все заголовки ответа
-        console.log('=== All Refresh Response Headers ===');
-        for (const [name, value] of response.headers.entries()) {
-            console.log(`${name}: ${value}`);
-        }
-
-        // Специально проверяем Set-Cookie заголовки
-        const setCookieHeaders = response.headers.get('set-cookie');
-        console.log('Set-Cookie header:', setCookieHeaders);
-
-        // Проверяем cookies после запроса
-        console.log('Cookies after refresh request:', document.cookie);
-
-        if (!response.ok) {
-            // Получаем детали ошибки
-            let errorDetails = '';
-            try {
-                const errorData = await response.json();
-                errorDetails = ` - ${JSON.stringify(errorData)}`;
-            } catch (e) {
-                // Игнорируем ошибки парсинга JSON
-                console.log('Failed to parse error response as JSON:', e);
-            }
-            throw new Error(`Refresh failed: ${response.status} ${response.statusText}${errorDetails}`);
-        }
-
-        const result = await parseJsonResponse(response);
-        console.log('Refresh response data:', result);
-        console.log('=== End Refresh API Debug ===');
-
-        // Проверяем успешность операции
-        if (!result.success) {
+        if (!response.data.success) {
             throw new Error('Refresh operation failed');
         }
 
-        // Для десктопа (cookies) - токены уже установлены в cookies, проверяем их наличие
-        if (!isMobileDevice()) {
-            // Проверяем что новые токены есть в cookies
-            const newAccessToken = getAccessToken();
-            if (!newAccessToken) {
-                throw new Error('No access token found in cookies after refresh');
-            }
-            console.log('Access token refreshed successfully via cookies');
-        } else {
-            // Для мобильных - сохраняем токены из ответа
-            if (result.access_token) {
-                localStorage.setItem('access_token', result.access_token);
-                if (result.refresh_token) {
-                    localStorage.setItem('refresh_token', result.refresh_token);
-                }
-                console.log('Access token refreshed successfully via localStorage');
-            } else {
-                throw new Error('No access token in refresh response for mobile');
+        // Для мобильных сохраняем токены из ответа
+        if (isMobileDevice() && response.data.access_token) {
+            localStorage.setItem('access_token', response.data.access_token);
+            if (response.data.refresh_token) {
+                localStorage.setItem('refresh_token', response.data.refresh_token);
             }
         }
 
@@ -176,39 +134,39 @@ export const refreshAccessToken = async (): Promise<void> => {
             document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             document.cookie = 'refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         }
-
-        throw error;
     }
 };
 
 /**
- * Проверяет, аутентифицирован ли пользователь
+ * Проверяет, аутентифицирован ли пользователь.
+ *
+ * @returns boolean - true если пользователь авторизован и токен не истек.
+ *
+ * @example
+ * if (isAuthenticated()) {
+ *   console.log('User is logged in');
+ * }
  */
 export const isAuthenticated = (): boolean => {
     const token = getAccessToken();
 
-    console.log('=== isAuthenticated Debug ===');
-    console.log('isMobileDevice:', isMobileDevice());
-    console.log('localStorage access_token:', localStorage.getItem('access_token'));
-    console.log('document.cookie:', document.cookie);
-    console.log('getAccessToken result:', token);
-
     if (!token) {
-        console.log('No token found, returning false');
-        console.log('=== End Debug ===');
         return false;
     }
 
-    // Проверяем, не истек ли токен
-    const expired = isTokenExpired(token);
-    console.log('token expired:', expired);
-    console.log('=== End Debug ===');
-
-    return !expired;
+    return !isTokenExpired(token);
 };
 
 /**
- * Получает информацию о текущем пользователе из токена
+ * Получает информацию о текущем пользователе из токена.
+ *
+ * @returns User | null - Объект пользователя или null если не авторизован.
+ *
+ * @example
+ * const user = getCurrentUser();
+ * if (user) {
+ *   console.log(user.email);
+ * }
  */
 export const getCurrentUser = () => {
     const token = getAccessToken();
@@ -220,11 +178,13 @@ export const getCurrentUser = () => {
 };
 
 /**
- * Проверяет статус авторизации (локально)
+ * Проверяет статус авторизации (локально).
+ *
+ * @returns Promise<boolean> - Статус авторизации.
+ *
+ * @example
+ * const isLoggedIn = await checkAuthStatus();
  */
 export const checkAuthStatus = async (): Promise<boolean> => {
     return Promise.resolve(isAuthenticated());
 };
-
-// Экспортируем getAccessToken для обратной совместимости
-export { getAccessToken } from './api.client';

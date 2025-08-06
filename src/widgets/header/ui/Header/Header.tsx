@@ -10,7 +10,8 @@ import {
     CompassOutlined,
     LoginOutlined,
     UserAddOutlined,
-    MenuOutlined
+    MenuOutlined,
+    ArrowLeftOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
@@ -37,12 +38,15 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Проверяем, находимся ли мы на странице AI
+    const isAIPage = location.pathname === '/ai';
+
     // Отслеживаем размер экрана
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
             if (window.innerWidth > 768) {
-                setMobileMenuOpen(false); // Закрываем мобильное меню на десктопе
+                setMobileMenuOpen(false);
             }
         };
 
@@ -91,7 +95,6 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
     };
 
     const handleMenuClick = (key: string) => {
-
         setMobileMenuOpen(false);
 
         switch (key) {
@@ -113,6 +116,9 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
             case 'signup':
                 navigate('/signup');
                 break;
+            case 'back-to-home':
+                navigate('/');
+                break;
         }
     };
 
@@ -126,6 +132,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
         if (path === '/dashboard/starred') return ['starred'];
         if (path === '/dashboard/explorer') return ['explorer'];
         if (path === '/' || path === '/dashboard') return ['home'];
+        if (path === '/ai') return ['back-to-home'];
 
         return ['home'];
     };
@@ -156,34 +163,43 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
         },
     ];
 
-    // Основные пункты меню
+    // Основные пункты меню - разные для AI страницы и остальных
     const mainMenuItems = authProp
-        ? [
-            {
-                key: 'home',
-                label: 'Главная',
-                icon: <HomeOutlined />,
-                onClick: () => handleMenuClick('home')
-            },
-            {
-                key: 'recent',
-                label: 'Недавние',
-                icon: <ClockCircleOutlined />,
-                onClick: () => handleMenuClick('recent')
-            },
-            {
-                key: 'starred',
-                label: 'Избранное',
-                icon: <StarOutlined />,
-                onClick: () => handleMenuClick('starred')
-            },
-            {
-                key: 'explorer',
-                label: 'Обзор',
-                icon: <CompassOutlined />,
-                onClick: () => handleMenuClick('explorer')
-            },
-        ]
+        ? isAIPage
+            ? [
+                {
+                    key: 'back-to-home',
+                    label: 'Вернуться на главную',
+                    icon: <ArrowLeftOutlined />,
+                    onClick: () => handleMenuClick('back-to-home')
+                }
+            ]
+            : [
+                {
+                    key: 'home',
+                    label: 'Главная',
+                    icon: <HomeOutlined />,
+                    onClick: () => handleMenuClick('home')
+                },
+                {
+                    key: 'recent',
+                    label: 'Недавние',
+                    icon: <ClockCircleOutlined />,
+                    onClick: () => handleMenuClick('recent')
+                },
+                {
+                    key: 'starred',
+                    label: 'Избранное',
+                    icon: <StarOutlined />,
+                    onClick: () => handleMenuClick('starred')
+                },
+                {
+                    key: 'explorer',
+                    label: 'Обзор',
+                    icon: <CompassOutlined />,
+                    onClick: () => handleMenuClick('explorer')
+                },
+            ]
         : [
             {
                 key: 'signin',
@@ -199,33 +215,64 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated: authProp, onAut
             },
         ];
 
-    // Полное меню для мобильных (включая пользовательские пункты)
+    // Полное меню для мобильных
     const mobileMenuItems = authProp
-        ? [
-            ...mainMenuItems,
-            { type: 'divider' as const },
-            {
-                key: 'profile',
-                label: 'Профиль',
-                icon: <UserOutlined />,
-                onClick: () => handleMenuClick('profile')
-            },
-            {
-                key: 'settings',
-                label: 'Настройки',
-                icon: <SettingOutlined />,
-                onClick: () => handleMenuClick('settings')
-            },
-            { type: 'divider' as const },
-            {
-                key: 'logout',
-                label: isLoggingOut ? 'Выходим...' : 'Выйти',
-                icon: <LogoutOutlined />,
-                onClick: handleLogout,
-                disabled: isLoggingOut,
-                danger: true,
-            },
-        ]
+        ? isAIPage
+            ? [
+                {
+                    key: 'back-to-home',
+                    label: 'Вернуться на главную',
+                    icon: <ArrowLeftOutlined />,
+                    onClick: () => handleMenuClick('back-to-home')
+                },
+                { type: 'divider' as const },
+                {
+                    key: 'profile',
+                    label: 'Профиль',
+                    icon: <UserOutlined />,
+                    onClick: () => handleMenuClick('profile')
+                },
+                {
+                    key: 'settings',
+                    label: 'Настройки',
+                    icon: <SettingOutlined />,
+                    onClick: () => handleMenuClick('settings')
+                },
+                { type: 'divider' as const },
+                {
+                    key: 'logout',
+                    label: isLoggingOut ? 'Выходим...' : 'Выйти',
+                    icon: <LogoutOutlined />,
+                    onClick: handleLogout,
+                    disabled: isLoggingOut,
+                    danger: true,
+                },
+            ]
+            : [
+                ...mainMenuItems,
+                { type: 'divider' as const },
+                {
+                    key: 'profile',
+                    label: 'Профиль',
+                    icon: <UserOutlined />,
+                    onClick: () => handleMenuClick('profile')
+                },
+                {
+                    key: 'settings',
+                    label: 'Настройки',
+                    icon: <SettingOutlined />,
+                    onClick: () => handleMenuClick('settings')
+                },
+                { type: 'divider' as const },
+                {
+                    key: 'logout',
+                    label: isLoggingOut ? 'Выходим...' : 'Выйти',
+                    icon: <LogoutOutlined />,
+                    onClick: handleLogout,
+                    disabled: isLoggingOut,
+                    danger: true,
+                },
+            ]
         : mainMenuItems;
 
     return (

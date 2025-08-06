@@ -2,11 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { message } from 'antd';
 import {
     createWorkspace,
-    getWorkspaces,
+    getWorkspaces
+} from '@/pages/Workspaces/Workspaces.api';
+import {
     type Workspace,
     type CreateWorkspaceRequest,
     type WorkspaceListParams,
-} from '@/entities/workspace';
+} from '@/pages/Workspaces/Workspaces.types';
 import { ApiError } from '@/shared/api/api.types';
 
 export const useWorkspaces = (initialParams: WorkspaceListParams = {}) => {

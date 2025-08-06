@@ -10,7 +10,16 @@
   box-shadow: var(--box-shadow);
   display: flex;
   align-items: center;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s ease;
+
+  //   &.hidden {
+  //     transform: translateY(-100%);
+  //   }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    height: 48px;
+  }
 
   .menu {
     flex: 1;
@@ -23,10 +32,19 @@
       position: relative;
       gap: 4px;
 
+      //   @media (max-width: 768px) {
+      //     min-height: 44px !important;
+      //     font-size: 16px !important;
+      //   }
+
       .anticon {
         font-size: 16px;
         min-width: 16px;
         flex-shrink: 0;
+
+        @media (max-width: 768px) {
+          font-size: 18px;
+        }
       }
     }
 
@@ -69,6 +87,10 @@
     margin-left: auto;
     flex-shrink: 0;
 
+    @media (max-width: 768px) {
+      gap: 8px;
+    }
+
     .userAvatar {
       transition: transform 0.2s, box-shadow 0.2s;
 
@@ -91,6 +113,10 @@
 
       .anticon {
         font-size: 18px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 22px;
       }
     }
   }
@@ -135,6 +161,7 @@
     gap: 12px !important;
     font-size: 16px !important;
     color: var(--content-text-color) !important;
+    min-height: 56px !important;
 
     .anticon {
       font-size: 18px !important;
@@ -259,3 +286,23 @@
     }
   }
 }
+
+// /* Глобальные мобильные улучшения */
+// @media (max-width: 768px) {
+//   /* Убираем outline на touch устройствах, заменяем на box-shadow */
+//   :global(button:focus),
+//   :global(input:focus),
+//   :global(select:focus),
+//   :global(textarea:focus) {
+//     outline: none !important;
+//     box-shadow: 0 0 0 2px var(--primary-color) !important;
+//   }
+
+//   /* Увеличиваем минимальные размеры интерактивных элементов */
+
+//   :global(input),
+//   :global(select),
+//   :global(textarea) {
+//     min-height: 44px !important;
+//   }
+// }

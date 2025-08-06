@@ -23,6 +23,7 @@ import {
 } from '@ant-design/icons';
 import { useWorkspaces } from '@/shared/hooks/useWorkspaces';
 import { CreateWorkspaceModal } from '@/features/workspace-create';
+import { isAuthenticated } from '@/shared/api/auth.api';
 import type { Workspace, WorkspaceSortField, CreateWorkspaceRequest } from './Workspaces.types';
 import styles from './Workspaces.module.scss';
 
@@ -33,20 +34,13 @@ const { Search } = Input;
 type ViewMode = 'grid' | 'list';
 
 const Workspaces: React.FC = () => {
+    console.log('Workspaces: Component mounted');
+
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
     const [sortBy, setSortBy] = useState<WorkspaceSortField>('updated_at');
     const [sortDesc, setSortDesc] = useState(true);
-
-    // Проверяем, что компонент смонтирован
-    useEffect(() => {
-        console.log('Workspaces: Component mounted');
-
-        return () => {
-            console.log('Workspaces: Component unmounted');
-        };
-    }, []);
 
     const {
         workspaces,
@@ -59,12 +53,42 @@ const Workspaces: React.FC = () => {
         refresh,
     } = useWorkspaces();
 
-    // Автоматическая загрузка данных при монтировании компонента
+    // Проверяем авторизацию и загружаем данные
     useEffect(() => {
-        console.log('Workspaces: Component mounted - loading initial data');
-        refresh(); // Загружаем данные при первом рендере
+        console.log('Workspaces: Component mounted - checking auth status');
+
+        // Проверяем авторизацию перед загрузкой данных
+        const authStatus = isAuthenticated();
+        console.log('Workspaces: Auth status:', authStatus);
+
+        if (authStatus) {
+            console.log('Workspaces: User authenticated - loading initial data');
+            refresh(); // Загружаем данные только если пользователь авторизован
+        } else {
+            console.log('Workspaces: User not authenticated - skipping data load');
+        }
+
+        return () => {
+            console.log('Workspaces: Component unmounted');
+        };
     }, []); // Пустой массив зависимостей - выполняется только при монтировании
 
+    // // Если пользователь не авторизован, показываем заглушку
+    // if (!isAuthenticated()) {
+    //     return (
+    //         <div className={styles.dashboard}>
+    //             <div style={{
+    //                 display: 'flex',
+    //                 justifyContent: 'center',
+    //                 alignItems: 'center',
+    //                 height: '50vh',
+    //                 fontSize: '16px'
+    //             }}>
+    //                 Перенаправление на страницу входа...
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     // Обработчики
     const handleCreateModalOpen = () => setCreateModalOpen(true);

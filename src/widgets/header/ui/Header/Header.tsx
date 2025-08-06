@@ -16,6 +16,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import { ThemeSwitcher } from '@/features/theme-switcher/ui/ThemeSwitcher/ThemeSwitcher';
+
 import { useTheme } from '@/app/providers/ThemeProvider';
 import { logout } from '@/shared/api/auth.api';
 import { getErrorMessage } from '@/shared/api/api.handlers';

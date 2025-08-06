@@ -26,6 +26,15 @@ const App: React.FC = () => {
     });
 
     const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [headerVisible, setHeaderVisible] = useState(true);
+    const [footerVisible, setFooterVisible] = useState(true);
+
+    const touchStartY = useRef(0);
+    const touchStartTime = useRef(0);
+    const lastScrollY = useRef(0);
+    const scrollDirection = useRef<'up' | 'down' | null>(null);
+
     const initRef = useRef(false);
     const authCheckCount = useRef(0);
     const lastNavigationRef = useRef<string>('');
@@ -35,6 +44,102 @@ const App: React.FC = () => {
 
     // Показываем плавающую кнопку AI только для авторизованных пользователей на страницах кроме AI и авторизации
     const showFloatingAI = authenticated && !isAuthPage && !isAIPage;
+
+    // Управление видимостью заголовка и подвала на мобильных устройствах
+    useEffect(() => {
+        const handleResize = () => {
+            const newIsMobile = window.innerWidth <= 768;
+            setIsMobile(newIsMobile);
+
+            if (!newIsMobile) {
+                setHeaderVisible(true);
+                setFooterVisible(true);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Управление видимостью заголовка и подвала при прокрутке на мобильных устройствах
+    useEffect(() => {
+        if (!isMobile) return;
+
+        let scrollTimeout: NodeJS.Timeout;
+
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartY.current = e.touches[0].clientY;
+            touchStartTime.current = Date.now();
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            const currentY = e.touches[0].clientY;
+            const deltaY = touchStartY.current - currentY;
+            const deltaTime = Date.now() - touchStartTime.current;
+
+            // Detect fast swipe gestures
+            if (Math.abs(deltaY) > 50 && deltaTime < 300) {
+                if (deltaY > 0) {
+                    // Swipe up - hide header and footer
+                    setHeaderVisible(false);
+                    setFooterVisible(false);
+                } else {
+                    // Swipe down - show header and footer
+                    setHeaderVisible(true);
+                    setFooterVisible(true);
+                }
+            }
+        };
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            const deltaY = currentScrollY - lastScrollY.current;
+
+            // Clear existing timeout
+            clearTimeout(scrollTimeout);
+
+            // Detect scroll direction
+            if (Math.abs(deltaY) > 5) {
+                const newDirection = deltaY > 0 ? 'down' : 'up';
+
+                if (newDirection !== scrollDirection.current) {
+                    scrollDirection.current = newDirection;
+
+                    if (newDirection === 'down' && currentScrollY > 100) {
+                        // Scrolling down - hide header and footer
+                        setHeaderVisible(false);
+                        setFooterVisible(false);
+                    } else if (newDirection === 'up') {
+                        // Scrolling up - show header and footer
+                        setHeaderVisible(true);
+                        setFooterVisible(true);
+                    }
+                }
+            }
+
+            lastScrollY.current = currentScrollY;
+
+            // Auto-hide header after inactivity
+            scrollTimeout = setTimeout(() => {
+                if (currentScrollY > 100) {
+                    setHeaderVisible(false);
+                    setFooterVisible(false);
+                }
+            }, 2000);
+        };
+
+        // Add event listeners
+        document.addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            document.removeEventListener('touchstart', handleTouchStart);
+            document.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('scroll', handleScroll);
+            clearTimeout(scrollTimeout);
+        };
+    }, [isMobile]);
 
     // Функция проверки авторизации с детальным логированием
     const checkAuth = (): boolean => {
@@ -87,8 +192,8 @@ const App: React.FC = () => {
         } else {
             if (currentPath === '/signin' || currentPath === '/signup' || currentPath === '/') {
                 console.log('✅ User authenticated, redirecting to main page');
-                lastNavigationRef.current = '/';
-                navigate('/', { replace: true });
+                lastNavigationRef.current = '/workspaces';
+                navigate('/workspaces', { replace: true });
             }
         }
     };
@@ -109,7 +214,7 @@ const App: React.FC = () => {
         }
     };
 
-    // Инициализация
+    // Инициализация - КРИТИЧЕСКИ ВАЖНО: делаем навигацию СИНХРОННО
     useEffect(() => {
         if (initRef.current) return;
 
@@ -118,20 +223,24 @@ const App: React.FC = () => {
 
         // Повторно проверяем и обновляем состояние для синхронизации
         const authStatus = checkAuth();
+
+        console.log('🚀 App: Auth status after init:', authStatus);
+        console.log('🚀 App: Current path:', location.pathname);
+
+        // Обновляем состояние авторизации если нужно
         if (authenticated !== authStatus) {
             console.log('🔄 Synchronizing auth state:', authenticated, '->', authStatus);
             setAuthenticated(authStatus);
         }
 
-        setLoading(false);
+        // ВАЖНО: Сначала делаем навигацию, ПОТОМ убираем loading
+        // Это предотвратит рендеринг компонентов до редиректа
+        handleNavigation(authStatus, location.pathname);
 
-        console.log('🚀 App: Auth status after init:', authStatus);
-        console.log('🚀 App: Current path:', location.pathname);
-
-        // Добавляем небольшую задержку для стабилизации состояния
+        // Устанавливаем небольшую задержку для завершения навигации
         setTimeout(() => {
-            handleNavigation(authStatus, location.pathname);
-        }, 100);
+            setLoading(false);
+        }, 50);
     }, []);
 
     // События
@@ -186,10 +295,11 @@ const App: React.FC = () => {
         console.log('📊 ===================');
     }, [authenticated, location.pathname, loading, showFloatingAI]);
 
-    if (loading) {
+    // ВАЖНО: Показываем загрузку ИЛИ если мы на неавторизованной странице без авторизации
+    if (loading || (!authenticated && !isAuthPage && location.pathname !== '/signin')) {
         return (
             <ThemeProvider>
-                <Layout className={styles.appLayout}>
+                <Layout className={`${styles.appLayout} ${isMobile ? styles.mobileLayout : ''}`}>
                     <Content className={styles.appContent}>
                         <div className={styles.appContentInner}>
                             <div style={{
@@ -210,22 +320,28 @@ const App: React.FC = () => {
 
     return (
         <ThemeProvider>
-            <Layout className={styles.appLayout}>
-                <Header
-                    isAuthenticated={authenticated}
-                    onAuthChange={updateAuth}
-                />
-                <Content className={styles.appContent}>
-                    <div className={`${styles.appContentInner} ${!isAuthPage ? styles.regularPageContent : ''}`}>
+            <Layout className={`${styles.appLayout} ${isMobile ? styles.mobileLayout : ''}`}>
+                <div className={`${styles.header} ${isMobile ? styles.mobileHeader : ''} ${isMobile && !headerVisible ? styles.headerHidden : ''}`}>
+                    <Header
+                        isAuthenticated={authenticated}
+                        onAuthChange={updateAuth}
+                    />
+                </div>
+                <Content className={`${styles.appContent} ${isMobile ? styles.mobileContent : ''}`}>
+                    <div className={`${styles.appContentInner} ${!isAuthPage ? styles.regularPageContent : ''} ${isMobile ? styles.mobileContentInner : ''}`}>
                         <Outlet />
                     </div>
                 </Content>
-                <Footer className={styles.appFooter}>
+                <Footer className={`${styles.appFooter} ${isMobile ? styles.mobileFooter : ''} ${isMobile && !footerVisible ? styles.footerHidden : ''}`}>
                     Equiply ©{new Date().getFullYear()}
                 </Footer>
 
                 {/* Плавающая кнопка AI */}
-                <FloatingAIButton visible={showFloatingAI} />
+                <div className={isMobile ? styles.mobileFloatingButton : ''}>
+                    <FloatingAIButton
+                        visible={showFloatingAI}
+                    />
+                </div>
             </Layout>
         </ThemeProvider>
     );

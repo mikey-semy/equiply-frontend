@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Select, Slider, InputNumber, Input, message, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { ModelType, AISettingsSchema, AISettingsUpdateSchema } from '@/pages/Chat/Chat.types';
+import { combineSystemMessages } from '@/shared/lib/ai-prompts';
 import { getAISettings, updateAISettings } from '@/pages/Chat/Chat.api';
 import styles from '@/pages/Chat/Chat.module.scss';
 
@@ -48,11 +49,14 @@ const AISettingsModal: React.FC<AISettingsModalProps> = ({ open, onCancel, onSav
             const values = await form.validateFields();
             setSaving(true);
 
+            // Объединяем пользовательские настройки со скрытыми системными инструкциями
+            const combinedSystemMessage = combineSystemMessages(values.system_message);
+
             const updateData: AISettingsUpdateSchema = {
                 preferred_model: values.preferred_model,
                 temperature: values.temperature,
                 max_tokens: values.max_tokens,
-                system_message: values.system_message || undefined
+                system_message: combinedSystemMessage
             };
 
             const response = await updateAISettings(updateData);
@@ -120,6 +124,28 @@ const AISettingsModal: React.FC<AISettingsModalProps> = ({ open, onCancel, onSav
             {/* <div className={styles.modelDescription}>{getModelDescription(model)}</div> */}
         </div>
     );
+
+    /**
+     * Извлекает пользовательскую часть из системного сообщения
+     */
+    const getUserSystemMessage = (fullSystemMessage?: string): string => {
+        if (!fullSystemMessage) return '';
+
+        // Ищем разделитель "ПОЛЬЗОВАТЕЛЬСКИЕ НАСТРОЙКИ НИЖЕ:"
+        const dividerIndex = fullSystemMessage.indexOf('ПОЛЬЗОВАТЕЛЬСКИЕ НАСТРОЙКИ НИЖЕ:');
+        if (dividerIndex === -1) {
+            // Если разделитель не найден, возвращаем всё сообщение
+            return fullSystemMessage;
+        }
+
+        // Извлекаем только пользовательскую часть после разделителя
+        const userPart = fullSystemMessage
+            .substring(dividerIndex + 'ПОЛЬЗОВАТЕЛЬСКИЕ НАСТРОЙКИ НИЖЕ:'.length)
+            .replace(/^---\s*/, '') // Убираем разделитель ---
+            .trim();
+
+        return userPart;
+    };
 
     return (
         <Modal
@@ -235,18 +261,23 @@ const AISettingsModal: React.FC<AISettingsModalProps> = ({ open, onCancel, onSav
                 <Form.Item
                     label={
                         <span>
-                            Системное сообщение{' '}
-                            <Tooltip title="Инструкции для AI, которые будут применяться ко всем запросам">
+                            Дополнительные инструкции{' '}
+                            <Tooltip title="Дополнительные инструкции для AI. Основные правила форматирования уже настроены автоматически.">
                                 <InfoCircleOutlined />
                             </Tooltip>
                         </span>
                     }
                     name="system_message"
+                    // Преобразуем значение при получении
+                    getValueFromEvent={(e) => e.target.value}
+                    getValueProps={(value) => ({
+                        value: getUserSystemMessage(value)
+                    })}
                 >
                     <TextArea
                         rows={4}
                         className={styles.systemMessageTextarea}
-                        placeholder="Например: Ты полезный AI-ассистент. Отвечай кратко и по существу..."
+                        placeholder="Например: Ты специалист по программированию. Давай детальные объяснения..."
                         showCount
                         maxLength={1000}
                     />

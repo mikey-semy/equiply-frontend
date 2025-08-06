@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons';
 import { Modal, Input, message, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import ReactMarkdown from 'react-markdown';
+import { MessageContent } from '@/shared/ui/MessageContent';
 import { formatDate } from '@/shared/lib/date.utils';
 import styles from './Chat.module.scss';
 import { AIChatSchema, UIMessage, MessageRole, AISettingsSchema } from './Chat.types';
@@ -962,7 +962,14 @@ const ChatPage: React.FC = () => {
                                         ? styles.typingBubble
                                         : styles.assistantBubble
                                     }`}>
-                                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                                    {message.isTyping ? (
+                                        <span>{message.text}</span>
+                                    ) : (
+                                        <MessageContent
+                                            content={message.text}
+                                            isUser={message.role === MessageRole.USER}
+                                        />
+                                    )}
                                     <div className={styles.messageTime}>
                                         {formatMessageTime(message.timestamp)}
                                     </div>
